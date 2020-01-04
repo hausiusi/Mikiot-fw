@@ -1,0 +1,2 @@
+error.c:8:6:report_error	0	static
+error.c:14:6:throw_error	0	static

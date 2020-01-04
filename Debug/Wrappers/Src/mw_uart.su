@@ -1,0 +1,2 @@
+mw_uart.c:11:6:mw_uart_write_bytes	0	static
+mw_uart.c:15:6:mw_uart_write_text	0	static

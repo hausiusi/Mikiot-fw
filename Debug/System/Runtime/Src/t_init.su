@@ -1,0 +1,2 @@
+t_init.c:13:13:thread_init	8	static,ignoring_inline_asm
+t_init.c:22:13:thread_test	8	static,ignoring_inline_asm

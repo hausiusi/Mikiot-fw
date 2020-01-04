@@ -1,0 +1,2 @@
+os_starter.c:42:13:_startup_tasks_create	40	static
+os_starter.c:56:6:os_start	8	static
