@@ -1,2 +1,0 @@
-exceptions.c:8:6:report_exception	0	static
-exceptions.c:13:6:throw_exception	0	static
