@@ -7,23 +7,23 @@
 
 #include "performance.h"
 
-static TIM_HandleTypeDef htim5, htim6;
+static TIM_HandleTypeDef htim5, htim4;
 
 static void _timer_measurer_init();
 static void _timer5_32_bit_init(uint32_t freq);
-static void _timer6_16_bit_init(uint32_t freq);
+static void _timer4_16_bit_init(uint32_t freq);
 static inline void _timer5_cnt_reset();
-static inline void _timer6_cnt_reset();
+static inline void _timer4_cnt_reset();
 
 void prf_timer_osmeasurer_init()
 {
-	_timer6_16_bit_init(PERF_OSTASKMEASURER_FREQ);
-	_timer6_cnt_reset();
+	_timer4_16_bit_init(PERF_OSTASKMEASURER_FREQ);
+	_timer4_cnt_reset();
 }
 
 uint32_t prf_timer_osmeasurer_count_get()
 {
-	return htim6.Instance->CNT;
+	return htim4.Instance->CNT;
 }
 
 inline void prf_start_measurement()
@@ -58,17 +58,17 @@ static void _timer5_32_bit_init(uint32_t freq)
 	HAL_TIM_Base_Start(&htim5);
 }
 
-static void _timer6_16_bit_init(uint32_t freq)
+static void _timer4_16_bit_init(uint32_t freq)
 {
 	uint32_t prescaler_value = (uint32_t)((SystemCoreClock/4)/ freq) - 1;
-	htim6.Instance = OSTASKMEASURER_TIMER;
-	htim6.Init.Prescaler = prescaler_value;
-	htim6.Init.Period = freq-1;
-	htim6.Init.ClockDivision = TIM_CLOCKDIVISION_DIV2;
-	htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-	__HAL_RCC_TIM6_CLK_ENABLE();
-	HAL_TIM_Base_Init(&htim6);
-	HAL_TIM_Base_Start(&htim6);
+	htim4.Instance = OSTASKMEASURER_TIMER;
+	htim4.Init.Prescaler = prescaler_value;
+	htim4.Init.Period = freq-1;
+	htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV2;
+	htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+	__HAL_RCC_TIM4_CLK_ENABLE();
+	HAL_TIM_Base_Init(&htim4);
+	HAL_TIM_Base_Start(&htim4);
 }
 
 static inline void _timer5_cnt_reset()
@@ -76,7 +76,7 @@ static inline void _timer5_cnt_reset()
 	htim5.Instance->CNT = 0;
 }
 
-static inline void _timer6_cnt_reset()
+static inline void _timer4_cnt_reset()
 {
-	htim6.Instance->CNT = 0;
+	htim4.Instance->CNT = 0;
 }
