@@ -12,8 +12,4 @@
 
 #define mw_hal_init()			HAL_Init()
 
-
-/* To be removed */
-#define wrap_uart3_dma_string_transmit(x)
-
 #endif /* MW_REDEFINES_H_ */

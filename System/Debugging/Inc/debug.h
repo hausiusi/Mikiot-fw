@@ -13,7 +13,7 @@
 #endif
 
 #include <stdio.h>
-#include "mw_uart.h"
+#include <mw_uart1.h>
 #include "mw_redefines.h"
 
 #define DEBUG_ON 1
@@ -27,8 +27,8 @@ void put_trace_text(char* ch);
 #define debug_trace(str_format, vargs...) do { sprintf(trace_dbg_buf, str_format, ##vargs); \
 											 	 put_trace_text(trace_dbg_buf); } while(0)
 
-#define debug_uart3(str_format, vargs...) do { sprintf(uart_dbg_buf, str_format, ##vargs); \
-												wrap_uart3_dma_string_transmit(uart_dbg_buf); } while(0)
+#define debug_p(str_format, vargs...) do { sprintf(uart_dbg_buf, str_format, ##vargs); \
+												mw_uart1_dma_string_transmit(uart_dbg_buf); } while(0)
 
 
 #ifdef __cplusplus
