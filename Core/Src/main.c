@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "Wrappers/Inc/mw_redefines.h"
 #include "os_starter.h"
+#include "mw_clock.h"
 
 /**
   * @brief  The application entry point.
@@ -10,6 +11,8 @@
 int main(void)
 {
 	mw_hal_init();
+	mw_internal_clock_init();
+	mw_external_clock_init(100);
 	os_start();
 
 	while(1)

@@ -69,6 +69,8 @@
 #define STM32F4
 #endif /* STM32F4 */
 
+#define HSE_VALUE		(8000000UL)
+
 /* Uncomment the line below according to the target STM32 device used in your
    application 
   */
