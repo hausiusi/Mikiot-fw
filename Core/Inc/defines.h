@@ -14,6 +14,8 @@
 
 #define MAX_BUSY_BUF_TIMEOUT 0xFFFFFFFFUL
 #define RTOS_TASKMGR_USE	1
+#define MIN_CPU_FREQ_MHZ	16
+#define MAX_CPU_FREQ_MHZ	100
 
 /**
 * \brief           Get count of statically allocated array
