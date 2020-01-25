@@ -32,11 +32,6 @@ extern void thread_init() {
 	}
 }
 
-void uart_idle_detected(uint8_t* databuffer, uint32_t position,
-		uint32_t buf_max_len) {
-	debug_p("Idle detected\n");
-}
-
 static void rtc_init(rtc_handle_t* handl) {
 	mw_rtc_init(handl, RTC_HOURFORMAT_24, Error_Handler);
 }
@@ -46,8 +41,7 @@ extern void thread_test() {
 		asm("NOP");
 	}
 	//int mhz = 30;
-
-	mw_rtc_init(&hrtc, RTC_HOURFORMAT_24, Error_Handler);
+	rtc_init(&hrtc);
 	/*  Time */
 	sTime.Hours = 2;
 	sTime.Minutes = 10;
