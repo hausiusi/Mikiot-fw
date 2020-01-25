@@ -68,8 +68,10 @@ void mw_uart1_dma_data_transmit(uint8_t* data, uint32_t length) {
 /* Local functions */
 
 static void _usart1_configure(uint32_t baud_rate) {
+	/* @formatter:off */
 	__USART1_CLK_ENABLE();
 	__GPIOB_CLK_ENABLE();
+	/* @formatter:on */
 	GPIO_InitTypeDef igpio;
 	/* Tx pin for UART1 */
 	igpio.Pin = GPIO_PIN_6;
@@ -157,6 +159,9 @@ void USART1_IRQHandler() {
 			/* Passes last recorded address of DMA buffer */
 			uart_rec_data_process(uart_rx_dma_buff,
 			UART1_DMA_RX_BUFFER_SIZE - hdma_usart1_rx.Instance->NDTR,
+			UART1_DMA_RX_BUFFER_SIZE);
+			HAL_UART_DMAStop(&huart1);
+			HAL_UART_Receive_DMA(&huart1, uart_rx_dma_buff,
 			UART1_DMA_RX_BUFFER_SIZE);
 		}
 	}

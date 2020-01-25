@@ -12,6 +12,7 @@
 #include "task.h"
 #include "mw_uart1.h"
 #include "os_loader.h"
+#include "cmdline.h"
 
 #define UART1_BAUD_RATE			115200U
 
@@ -35,15 +36,16 @@ extern void thread_uart1_receiver() {
 		watermark_current = uxTaskGetStackHighWaterMark( NULL);
 		if (watermark_old > watermark_current) {
 			watermark_old = watermark_current;
-			debug_p("UART1 receiver task high watermark:%lu\n", watermark_current);
+			debug_p("UART1 receiver task high watermark:%lu\n",
+					watermark_current);
 		}
 		xTaskNotifyWait( pdFALSE, /* Don't clear bits on entry. */
 		ULONG_MAX, /* Clear all bits on exit. */
 		&notify_value, /* Stores the notified value. */
 		portMAX_DELAY);
-		// TODO: process data here
+		cmd_process(uart1_rx_buffer);
+		memset(uart1_rx_buffer, 0, UART1_DMA_RX_BUFFER_SIZE);
 		debug_p("UART1 receiver task notified\n");
-
 		vTaskDelay(0);
 	}
 }
