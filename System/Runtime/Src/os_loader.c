@@ -7,15 +7,11 @@
 
 #include <stddef.h>
 #include <stdio.h>
-#include "FreeRTOSConfig.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "defines.h"
 #include "stm32f4xx.h"
-#include "os_starter.h"
+#include "os_loader.h"
+#include "defines.h"
 
 // os startup process list
-// probably will be a struct
 // having handlers for each process when they will be created
 // we will call only wrappers or our OS functions not directly cmsis just to avoid later porting problems
 
@@ -27,17 +23,20 @@ typedef struct startup_task {
 	void* const parameters;
 	UBaseType_t priority;
 	TaskHandle_t created_task;
-}startup_task_t;
+} startup_task_t;
 
 void thread_init();
 void thread_test();
+void thread_uart1_receiver();
+
+/* @formatter:off */
 
 startup_task_t startup_tasks[] =
 {
 		{.result = 0, .thread = thread_init, .name = "Init", .stack_depth = configMINIMAL_STACK_SIZE, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_test, .name = "Test", .stack_depth = configMINIMAL_STACK_SIZE, .parameters = NULL, .priority = 1},
+		{.result = 0, .thread = thread_uart1_receiver, .name = "Uart1 Rx", .stack_depth = 256, .parameters = NULL, .priority = 1},
 };
-
 
 static void _startup_tasks_create() {
 	for(int i = 0; i < COUNT(startup_tasks); i++)
@@ -53,10 +52,14 @@ static void _startup_tasks_create() {
 	}
 }
 
+/* @formatter:on */
+
 void os_start() {
 	_startup_tasks_create();
 	vTaskStartScheduler();
 }
 
-
+TaskHandle_t os_get_task_handler(task_index_enum_t task_index) {
+	return startup_tasks[task_index].created_task;
+}
 

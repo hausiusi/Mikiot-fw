@@ -1,6 +1,6 @@
+#include <os_loader.h>
 #include <stdio.h>
 #include "Wrappers/Inc/mw_redefines.h"
-#include "os_starter.h"
 #include "mw_clock.h"
 
 /**
