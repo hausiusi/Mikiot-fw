@@ -13,6 +13,7 @@
 #include "mw_clock.h"
 #include "debug.h"
 #include "mw_rtc.h"
+#include "error.h"
 
 uint32_t tmp, sysclk;
 rtc_handle_t hrtc;
@@ -33,7 +34,7 @@ extern void thread_init() {
 }
 
 static void rtc_init(rtc_handle_t* handl) {
-	mw_rtc_init(handl, RTC_HOURFORMAT_24, Error_Handler);
+	mw_rtc_init(handl, RTC_HOURFORMAT_24);
 }
 
 extern void thread_test() {
@@ -63,11 +64,11 @@ extern void thread_test() {
 		//		mw_internal_clock_init();
 		//		mw_external_clock_init(mhz--);
 		//		mw_uart1_init(9600, uart_idle_detected);
-		//		debug_p("123456789\n");
 
 		mw_rtc_get_time(&hrtc, &sTime);
 		mw_rtc_get_date(&hrtc, &sDate);
-		/* USER CODE BEGIN 3 */
+		debug_p("Date: %i-%i-%i - Time: %i:%i:%i\n", sDate.Year, sDate.Month,
+				sDate.Date, sTime.Hours, sTime.Minutes, sTime.Seconds);
 		vTaskDelay(1000);
 	}
 }
