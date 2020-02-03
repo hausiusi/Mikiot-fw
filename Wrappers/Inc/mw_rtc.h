@@ -10,9 +10,9 @@
 
 #include "mw_redefines.h"
 #include "inttypes.h"
+#include "error.h"
 
-void mw_rtc_init(rtc_handle_t* hrtc, const uint32_t* hour_format,
-		void (*handler)());
+void mw_rtc_init(rtc_handle_t* hrtc, const uint32_t* hour_format);
 rtc_date_t* mw_rtc_get_date(rtc_handle_t* hrtc, rtc_date_t* date);
 rtc_time_t* mw_rtc_get_time(rtc_handle_t* hrtc, rtc_time_t* time);
 void mw_rtc_set(rtc_handle_t* hrtc, rtc_time_t* time, rtc_date_t* date,

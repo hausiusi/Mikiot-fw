@@ -34,7 +34,7 @@ void thread_uart1_receiver();
 startup_task_t startup_tasks[] =
 {
 		{.result = 0, .thread = thread_init, .name = "Init", .stack_depth = configMINIMAL_STACK_SIZE, .parameters = NULL, .priority = 1},
-		{.result = 0, .thread = thread_test, .name = "Test", .stack_depth = configMINIMAL_STACK_SIZE, .parameters = NULL, .priority = 1},
+		{.result = 0, .thread = thread_test, .name = "Test", .stack_depth = 256, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_uart1_receiver, .name = "Uart1 Rx", .stack_depth = 256, .parameters = NULL, .priority = 1},
 };
 
