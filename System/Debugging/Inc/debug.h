@@ -30,7 +30,6 @@ void put_trace_text(char* ch);
 #define debug_p(str_format, vargs...) do { sprintf(uart_dbg_buf, str_format, ##vargs); \
 												mw_uart1_dma_string_transmit(uart_dbg_buf); } while(0)
 
-
 #ifdef __cplusplus
  }
 #endif
