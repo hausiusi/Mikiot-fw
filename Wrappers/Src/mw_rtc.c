@@ -22,6 +22,7 @@ void mw_rtc_init(rtc_handle_t* hrtc, const uint32_t* hour_format) {
 	hrtc->Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
 	hrtc->Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
 
+	__HAL_RCC_RTC_ENABLE();
 	/* While loop until RTC interrupt */
 	if (HAL_RTC_Init(hrtc) != HAL_OK) {
 		error_report(0, InitError);
