@@ -11,7 +11,7 @@
 #include "inttypes.h"
 #include "error.h"
 
-void mw_rtc_init(rtc_handle_t* hrtc, const uint32_t* hour_format) {
+void mw_rtc_init(rtc_handle_t* hrtc, const uint32_t hour_format) {
 
 	/* Initialize RTC Only */
 	hrtc->Instance = RTC;
