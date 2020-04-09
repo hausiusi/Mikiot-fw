@@ -12,50 +12,41 @@
 #include "mw_uart1.h"
 #include "mw_clock.h"
 #include "debug.h"
-#include "mw_rtc.h"
+#include "mgr_rtc.h"
 #include "error.h"
 
-uint32_t tmp, sysclk;
-rtc_handle_t hrtc;
-rtc_time_t sTime = { 0 };
-rtc_date_t sDate = { 0 };
+static void _rtc_init() {
+	mgr_rtc_init(RTC_HOURFORMAT_24);
+	/* Time */
+	mgr_rtc_time.Hours = 2;
+	mgr_rtc_time.Minutes = 10;
+	mgr_rtc_time.Seconds = 40;
+	mgr_rtc_time.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+	mgr_rtc_time.StoreOperation = RTC_STOREOPERATION_RESET;
 
-void Error_Handler(void) {
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+	/* Set date and time */
+	mgr_rtc_date.WeekDay = RTC_WEEKDAY_WEDNESDAY;
+	mgr_rtc_date.Month = RTC_MONTH_JANUARY;
+	mgr_rtc_date.Date = 22;
+	mgr_rtc_date.Year = 20;
+
+	mgr_rtc_set(&mgr_rtc_time, &mgr_rtc_date);
 }
 
 extern void thread_init() {
-	for (int a = 0; a < 1000000; a++) {
-		asm("NOP");
-	}
+	_rtc_init();
 	for (;;) {
 		vTaskDelay(10);
 	}
 }
 
-static void rtc_init(rtc_handle_t* handl) {
-	mw_rtc_init(handl, RTC_HOURFORMAT_24);
-}
-
+/* Thread is created to test new features */
 extern void thread_test() {
 	for (int a = 0; a < 1000000; a++) {
 		asm("NOP");
 	}
 	//int mhz = 30;
-	rtc_init(&hrtc);
-	/*  Time */
-	sTime.Hours = 2;
-	sTime.Minutes = 10;
-	sTime.Seconds = 40;
-	sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-	sTime.StoreOperation = RTC_STOREOPERATION_RESET;
 
-	/* Set date and time */
-	sDate.WeekDay = RTC_WEEKDAY_WEDNESDAY;
-	sDate.Month = RTC_MONTH_JANUARY;
-	sDate.Date = 22;
-	sDate.Year = 20;
-	mw_rtc_set(&hrtc, &sTime, &sDate, Error_Handler);
 	/**/
 
 	for (;;) {
@@ -65,10 +56,6 @@ extern void thread_test() {
 		//		mw_external_clock_init(mhz--);
 		//		mw_uart1_init(9600, uart_idle_detected);
 
-		mw_rtc_get_time(&hrtc, &sTime);
-		mw_rtc_get_date(&hrtc, &sDate);
-		debug_p("Date: %i-%i-%i - Time: %i:%i:%i\n", sDate.Year, sDate.Month,
-				sDate.Date, sTime.Hours, sTime.Minutes, sTime.Seconds);
 		vTaskDelay(1000);
 	}
 }

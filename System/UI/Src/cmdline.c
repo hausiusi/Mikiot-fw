@@ -10,10 +10,13 @@
 #include "macrodefs.h"
 #include "debug.h"
 #include "bp_player.h"
+#include "mw_rtc.h"
+#include "mgr_rtc.h"
 
 static void _echo(void* args);
 static void _help(void* args);
 static void _play_blob(void* args);
+static void _datetime(void* args);
 
 #define CMD_BLOB_MAX_SIZE 		64 /* Maximum accepted command-line length for blob */
 static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
@@ -23,6 +26,7 @@ static cmd_struct_t commands[] = {
 	{ "echo", _echo, "Echoes the input" },
 	{ "help", _help, "Prints this help" },
 	{ "blob", _play_blob, "Converts input string to blob data and plays"},
+	{ "datetime", _datetime, "Prints date time"},
 };
 /* @formatter:on */
 
@@ -60,6 +64,10 @@ static void _play_blob(void* args) {
 		args++;
 	}
 	bp_player_play(blob_bytes);
+}
+
+static void _datetime(void* args) {
+	mgr_rtc_print_date();
 }
 
 void cmd_process(void* input) {
