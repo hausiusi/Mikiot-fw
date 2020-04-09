@@ -11,7 +11,7 @@
 #include "debug.h"
 #include "bp_player.h"
 
-static void _test(void* args);
+static void _echo(void* args);
 static void _help(void* args);
 static void _play_blob(void* args);
 
@@ -20,13 +20,13 @@ static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
 
 /* @formatter:off */
 static cmd_struct_t commands[] = {
-	{ "echo", _test, "Echoes the input" },
+	{ "echo", _echo, "Echoes the input" },
 	{ "help", _help, "Prints this help" },
 	{ "blob", _play_blob, "Converts input string to blob data and plays"},
 };
 /* @formatter:on */
 
-static void _test(void* args) {
+static void _echo(void* args) {
 	debug_p("%s\n", (char* )args);
 }
 
