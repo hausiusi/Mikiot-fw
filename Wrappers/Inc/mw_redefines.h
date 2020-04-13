@@ -11,10 +11,10 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_rtc.h"
 
-#define mw_hal_init()			HAL_Init()
+#define mw_hal_init()        HAL_Init()
 
-#define rtc_handle_t			RTC_HandleTypeDef
-#define rtc_time_t				RTC_TimeTypeDef
-#define rtc_date_t				RTC_DateTypeDef
+typedef RTC_HandleTypeDef rtc_handle_t;
+typedef RTC_TimeTypeDef rtc_time_t;
+typedef RTC_DateTypeDef rtc_date_t;
 
 #endif /* MW_REDEFINES_H_ */
