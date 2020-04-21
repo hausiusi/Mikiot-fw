@@ -67,7 +67,18 @@ static void _play_blob(void* args) {
 }
 
 static void _datetime(void* args) {
-	mgr_rtc_print_date();
+	if (!strncmp(args, "set", 3)) {
+		args += 4; // It is supposed to be one space after set argument
+		mgr_rtc_set_strf((char*) args);
+
+	} else if (!strncmp(args, "get", 3)) {
+		mgr_rtc_print_date();
+	} else {
+		debug_p("datetime command requires passed arguments\n");
+		debug_p("    get - prints system date and time in the terminal\n");
+		debug_p(
+				"    set - sets passed date and time as a system clock. format: dd-MM-yy HH:mm:ss\n");
+	}
 }
 
 void cmd_process(void* input) {
