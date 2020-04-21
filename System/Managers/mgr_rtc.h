@@ -19,6 +19,8 @@ void mgr_rtc_init(uint32_t hour_format);
 
 void mgr_rtc_set(rtc_time_t* time, rtc_date_t* date);
 
+void mgr_rtc_set_strf(const char* dt);
+
 void mgr_rtc_print_date();
 
 #endif /* MANAGERS_MGR_RTC_H_ */

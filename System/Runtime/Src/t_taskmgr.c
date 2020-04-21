@@ -16,6 +16,7 @@ void _system_load_print(TaskStatus_t* const tasks_statuses,
 		uint32_t tasks_count);
 
 static TaskStatus_t* tasks_statuses_now = NULL, * tasks_statuses_prev = NULL;
+static bool_t taskmgr_printing;
 
 extern void thread_taskmgr() {
 	uint32_t total_runtime;
@@ -62,8 +63,15 @@ extern void thread_taskmgr() {
 	}
 }
 
+extern void toggle_taskmgr_printing() {
+	taskmgr_printing = !taskmgr_printing;
+}
+
 void _system_load_print(TaskStatus_t* const tasks_statuses,
 		uint32_t tasks_count) {
+	if (!taskmgr_printing) {
+		return;
+	}
 	// Check how much CPU time used each task after the last check
 	// For this subtract previous counter value from the current runtime counter of the task
 	for (int i = 0; i < tasks_count; i++) {
