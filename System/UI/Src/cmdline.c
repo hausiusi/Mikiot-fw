@@ -13,10 +13,13 @@
 #include "mw_rtc.h"
 #include "mgr_rtc.h"
 
+void toggle_taskmgr_printing();
+
 static void _echo(void* args);
 static void _help(void* args);
 static void _play_blob(void* args);
 static void _datetime(void* args);
+static void _taskmgr(void* args);
 
 #define CMD_BLOB_MAX_SIZE 		64 /* Maximum accepted command-line length for blob */
 static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
@@ -26,7 +29,8 @@ static cmd_struct_t commands[] = {
 	{ "echo", _echo, "Echoes the input" },
 	{ "help", _help, "Prints this help" },
 	{ "blob", _play_blob, "Converts input string to blob data and plays"},
-	{ "datetime", _datetime, "Prints date time"},
+	{ "datetime", _datetime, "Sets or gets datetime"},
+	{ "taskmgr", _taskmgr, "Starts or stops task manager"},
 };
 /* @formatter:on */
 
@@ -79,6 +83,10 @@ static void _datetime(void* args) {
 		debug_p(
 				"    set - sets passed date and time as a system clock. format: dd-MM-yy HH:mm:ss\n");
 	}
+}
+
+static void _taskmgr(void* args) {
+	toggle_taskmgr_printing();
 }
 
 void cmd_process(void* input) {
