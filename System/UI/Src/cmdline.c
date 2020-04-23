@@ -12,6 +12,7 @@
 #include "bp_player.h"
 #include "mw_rtc.h"
 #include "mgr_rtc.h"
+#include "performance.h"
 
 void toggle_taskmgr_printing();
 
@@ -20,6 +21,7 @@ static void _help(void* args);
 static void _play_blob(void* args);
 static void _datetime(void* args);
 static void _taskmgr(void* args);
+static void _time(void* args);
 
 #define CMD_BLOB_MAX_SIZE 		64 /* Maximum accepted command-line length for blob */
 static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
@@ -31,6 +33,7 @@ static cmd_struct_t commands[] = {
 	{ "blob", _play_blob, "Converts input string to blob data and plays"},
 	{ "datetime", _datetime, "Sets or gets datetime"},
 	{ "taskmgr", _taskmgr, "Starts or stops task manager"},
+	{ "time", _time, "Measures command execution time" },
 };
 /* @formatter:on */
 
@@ -87,6 +90,12 @@ static void _datetime(void* args) {
 
 static void _taskmgr(void* args) {
 	toggle_taskmgr_printing();
+}
+
+static void _time(void* args) {
+	debug_p("PERF: Measuring execution time for: '%s'\n", (char* )args);
+	uint32_t time_us = prf_func_exect_time_get(cmd_process(args));
+	debug_p("PERF: Execution took %lu us\n", time_us);
 }
 
 void cmd_process(void* input) {
