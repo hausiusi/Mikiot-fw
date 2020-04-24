@@ -4,19 +4,17 @@
 #include "mw_clock.h"
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 
-int main(void)
-{
-	mw_hal_init();
+int main(void) {
+	mw_init();
 	mw_internal_clock_init();
 	mw_external_clock_init(100);
 	os_start();
 
-	while(1)
-	{
+	while (1) {
 	}
 }
 

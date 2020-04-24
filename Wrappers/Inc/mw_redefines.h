@@ -11,7 +11,7 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_rtc.h"
 
-#define mw_hal_init()        HAL_Init()
+#define mw_init()        HAL_Init()
 
 typedef RTC_HandleTypeDef rtc_handle_t;
 typedef RTC_TimeTypeDef rtc_time_t;
