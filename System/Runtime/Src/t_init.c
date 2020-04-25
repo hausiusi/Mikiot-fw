@@ -9,13 +9,15 @@
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "mw_uart1.h"
 #include "mw_clock.h"
+#include "mw_timebase.h"
+#include "mw_uart1.h"
 #include "debug.h"
 #include "mgr_rtc.h"
 #include "error.h"
 
 static void _rtc_init() {
+	mw_timebase_init(1000);
 	mgr_rtc_init(RTC_HOURFORMAT_24);
 	/* Time */
 	mgr_rtc_time.Hours = 2;

@@ -11,54 +11,25 @@
 #include "stddef.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "mw_redefines.h"
+#include "mgr_tasks.h"
 
-void _system_load_print(TaskStatus_t* const tasks_statuses,
-		uint32_t tasks_count);
+void _system_load_print(TaskStatus_t* const tasks_statuses_current,
+		TaskStatus_t* tasks_statuses_prev, uint32_t tasks_count);
 
-static TaskStatus_t* tasks_statuses_now = NULL, * tasks_statuses_prev = NULL;
 static bool_t taskmgr_printing;
 
 extern void thread_taskmgr() {
-	uint32_t total_runtime;
-	uint32_t alloc_len_prev = 0;
+	tasks_statuses_t* tasks_statuses;
 	for (;;) {
-		uint32_t tasks_count = uxTaskGetNumberOfTasks();
-		uint32_t alloc_len_now = tasks_count * sizeof(TaskStatus_t);
-		// Allocate memory only if it is needed
-		if (alloc_len_prev < alloc_len_now || tasks_statuses_now == NULL) {
-			if (tasks_statuses_now) {
-				vPortFree(tasks_statuses_now);
-			}
-			tasks_statuses_now = pvPortMalloc(alloc_len_now);
-			if (!tasks_statuses_now) {
-				debug_p(
-						"Unable to allocate %lu bytes of memory for task statuses\n",
-						alloc_len_now);
-				continue;
-			}
-			alloc_len_prev = alloc_len_now;
-		}
-		tasks_count = uxTaskGetSystemState(tasks_statuses_now, tasks_count,
-				&total_runtime);
-		if (tasks_statuses_prev) {
-			_system_load_print(tasks_statuses_now, tasks_count);
-		}
-		// Allocate memory only if it is needed
-		if (alloc_len_prev < alloc_len_now || tasks_statuses_prev == NULL) {
-			if (tasks_statuses_prev) {
-				vPortFree(tasks_statuses_prev);
-			}
-			tasks_statuses_prev = pvPortMalloc(alloc_len_now);
-			if (!tasks_statuses_prev) {
-				debug_p(
-						"Unable to allocate %lu bytes of memory for previous copy of task statuses \n",
-						alloc_len_now);
-				continue;
+		tasks_statuses = mgr_tasks_get_system_state();
+		if (tasks_statuses->is_available) {
+			if (taskmgr_printing) {
+				_system_load_print(tasks_statuses->current,
+						tasks_statuses->previous,
+						tasks_statuses->current_count);
 			}
 		}
-		// After all (process, print etc.) save this task status state in the buffer
-		// to have a reference for next check
-		memcpy(tasks_statuses_prev, tasks_statuses_now, alloc_len_now);
 		vTaskDelay(1000);
 	}
 }
@@ -67,19 +38,16 @@ extern void toggle_taskmgr_printing() {
 	taskmgr_printing = !taskmgr_printing;
 }
 
-void _system_load_print(TaskStatus_t* const tasks_statuses,
-		uint32_t tasks_count) {
-	if (!taskmgr_printing) {
-		return;
-	}
+void _system_load_print(TaskStatus_t* const tasks_statuses_current,
+		TaskStatus_t* tasks_statuses_prev, uint32_t tasks_count) {
 	// Check how much CPU time used each task after the last check
 	// For this subtract previous counter value from the current runtime counter of the task
 	for (int i = 0; i < tasks_count; i++) {
 		for (int j = 0; j < tasks_count; j++) {
 			if (tasks_statuses_prev[i].xTaskNumber
-					== tasks_statuses[j].xTaskNumber) {
+					== tasks_statuses_current[j].xTaskNumber) {
 				tasks_statuses_prev[i].ulRunTimeCounter =
-						tasks_statuses[j].ulRunTimeCounter
+						tasks_statuses_current[j].ulRunTimeCounter
 								- tasks_statuses_prev[i].ulRunTimeCounter;
 			}
 		}
