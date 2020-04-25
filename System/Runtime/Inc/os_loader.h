@@ -17,7 +17,7 @@ typedef enum task_index {
 	InitHandler,
 	TestHandler,
 	Uart1RxHandler,
-	TaskMgrHangler
+	TaskMgrHandler
 }task_index_enum_t;
 
 /* @formatter:on */

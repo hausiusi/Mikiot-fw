@@ -12,6 +12,7 @@
 #include "bp_player.h"
 #include "mw_rtc.h"
 #include "mgr_rtc.h"
+#include "performance.h"
 
 void toggle_taskmgr_printing();
 
@@ -20,6 +21,8 @@ static void _help(void* args);
 static void _play_blob(void* args);
 static void _datetime(void* args);
 static void _taskmgr(void* args);
+static void _time(void* args);
+static void _perfinfo(void* args);
 
 #define CMD_BLOB_MAX_SIZE 		64 /* Maximum accepted command-line length for blob */
 static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
@@ -31,6 +34,8 @@ static cmd_struct_t commands[] = {
 	{ "blob", _play_blob, "Converts input string to blob data and plays"},
 	{ "datetime", _datetime, "Sets or gets datetime"},
 	{ "taskmgr", _taskmgr, "Starts or stops task manager"},
+	{ "time", _time, "Measures command execution time" },
+	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
 };
 /* @formatter:on */
 
@@ -87,6 +92,25 @@ static void _datetime(void* args) {
 
 static void _taskmgr(void* args) {
 	toggle_taskmgr_printing();
+}
+
+static void _time(void* args) {
+	debug_p("PERF: Measuring execution time for: '%s'\n", (char* )args);
+	uint32_t time_us = prf_func_exect_time_get(cmd_process(args));
+	debug_p("PERF: Execution took %lu us\n", time_us);
+}
+
+static void _perfinfo(void* args) {
+	perfinfo_t perfinfo;
+	prf_get_info(&perfinfo);
+	debug_p("Core clock       : %uHz\n", perfinfo.core_clock);
+	debug_p("AHB clock        : %uHz\n", perfinfo.ahb_clock);
+	debug_p("APB1 clock       : %uHz\n", perfinfo.apb1_clock);
+	debug_p("APB2 clock       : %uHz\n", perfinfo.apb2_clock);
+	debug_p("Tasks count      : %u\n", perfinfo.tasks_count);
+	debug_p("Average CPU load : %u%\n", perfinfo.cpu_utilization);
+	debug_p("Available memory : %uB\n", perfinfo.available_heap);
+	debug_p("Uptime           : %ums\n", perfinfo.uptime);
 }
 
 void cmd_process(void* input) {

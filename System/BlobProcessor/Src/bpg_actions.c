@@ -8,6 +8,7 @@
 #include "bp_helper.h"
 #include "debug.h"
 #include "FreeRTOS.h"
+#include "mw_timebase.h"
 #include "task.h"
 
 blob_fp_t* bp_actions;
@@ -18,10 +19,13 @@ int _delay(blob_t* blob) {
 		//TODO: handle error
 		return -1;
 	}
-	uint32_t time_ms = *((uint32_t*) blob->data.args);
-	debug_p("_delay timeout: %lums\n", time_ms);
-	//TODO: vTaskDelay is temporary imprecise solution, later time should be calculated using RTC
-	vTaskDelay(time_ms);
+	uint32_t delay_amount_ms = *((uint32_t*) blob->data.args);
+	debug_p("_delay timeout: %lums\n", delay_amount_ms);
+	uint32_t timeout_end = mw_timebase_ticks_get() + delay_amount_ms;
+	while (mw_timebase_ticks_get() < timeout_end) {
+		vTaskDelay(0);
+	}
+
 	/* return block */
 	return 0;
 }
