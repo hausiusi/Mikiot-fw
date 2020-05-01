@@ -1,0 +1,13 @@
+variables:
+  BUILDER_SCRIPT: "/home/gitlab-runner/mikiot-build.sh"
+
+build:
+  image: docker:latest
+  stage: build
+  script:
+    - echo '--- PRINT USERNAME ----'
+    - whoami
+    - ls /home/gitlab-runner
+    - echo '-----------------------'
+    - $BUILDER_SCRIPT
+    - echo "Exit code "$?
