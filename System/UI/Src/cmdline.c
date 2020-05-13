@@ -24,6 +24,7 @@ static void _datetime(void* args);
 static void _taskmgr(void* args);
 static void _time(void* args);
 static void _perfinfo(void* args);
+static void _dbglevel(void* args);
 
 #define CMD_BLOB_MAX_SIZE 		64 /* Maximum accepted command-line length for blob */
 static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
@@ -37,6 +38,7 @@ static cmd_struct_t commands[] = {
 	{ "taskmgr", _taskmgr, "Starts or stops task manager"},
 	{ "time", _time, "Measures command execution time" },
 	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
+	{ "debuglevel", _dbglevel, "Gets or sets debug level" },
 };
 /* @formatter:on */
 
@@ -103,6 +105,66 @@ static void _time(void* args) {
 	debug_p("PERF: Measuring execution time for: '%s'\n", (char* )args);
 	uint32_t time_us = prf_func_exect_time_get(cmd_process(args));
 	debug_p("PERF: Execution took %lu us\n", time_us);
+}
+
+static void _dbglevel(void* args) {
+	bool_t success = true;
+	if (!strncmp(args, "set", 3)) {
+		args += 4; // It is supposed to be one space after set argument
+		char symbol = *(char*) args;
+		int level = 0;
+		switch (symbol) {
+		case 'E':
+			level = DBG_ERROR;
+			break;
+		case 'W':
+			level = DBG_WARNING;
+			break;
+		case 'N':
+			level = DBG_NOTE;
+			break;
+		case 'I':
+			level = DBG_INFO;
+			break;
+		default:
+			success = false;
+		}
+		if (success) {
+			debug_set_level(level);
+			debug_p("Debug level set successfully\n");
+		}
+	} else if (!strncmp(args, "get", 3)) {
+		int current_level = debug_get_level();
+		debug_p("Current debug level is ");
+		switch (current_level) {
+		case DBG_ERROR:
+			debug_p("DBG_ERROR");
+			break;
+		case DBG_WARNING:
+			debug_p("DBG_WARNING");
+			break;
+		case DBG_NOTE:
+			debug_p("DBG_NOTE");
+			break;
+		case DBG_INFO:
+			debug_p("DBG_INFO");
+			break;
+		default:
+			debug_p("UNKNOWN");
+			break;
+		}
+		debug_p("\n");
+	} else {
+		success = false;
+	}
+	if (!success) {
+		debug_p(
+				"To set debug level type 'debuglevel set' and one of following symbols:\n");
+		debug_p("    E - nothing will printed except errors\n");
+		debug_p("    W - errors and warnings will be printed\n");
+		debug_p("    N - errors, warnings and notifications will be printed\n");
+		debug_p("    I - every possible printable outputs will be printed\n");
+	}
 }
 
 static void _perfinfo(void* args) {
