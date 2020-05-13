@@ -131,3 +131,11 @@ void debugf(const char* str_buff, ...) {
 	mw_uart1_dma_string_transmit(dbg_buff);
 }
 
+void debug_set_level(int level) {
+	debug_level = level;
+}
+
+int debug_get_level() {
+	return debug_level;
+}
+

@@ -27,7 +27,7 @@ void uart1_data_received(uint8_t* databuffer, uint32_t position,
 
 extern void thread_cmdline() {
 	mw_uart1_dma_init(UART1_BAUD_RATE, uart1_data_received);
-	debug_p("UART1 initialized BR: %i\n", UART1_BAUD_RATE);
+	debug_info("UART1 initialized BR: %i\n", UART1_BAUD_RATE);
 
 	uint32_t notify_value = 0;
 	for (;;) {
@@ -36,7 +36,7 @@ extern void thread_cmdline() {
 		watermark_current = uxTaskGetStackHighWaterMark( NULL);
 		if (watermark_old > watermark_current) {
 			watermark_old = watermark_current;
-			debug_p("UART1 receiver task high watermark:%lu\n",
+			debug_note("UART1 receiver task high watermark:%lu\n",
 					watermark_current);
 		}
 		xTaskNotifyWait( pdFALSE, /* Don't clear bits on entry. */
@@ -45,7 +45,7 @@ extern void thread_cmdline() {
 		portMAX_DELAY);
 		cmd_process(uart1_rx_buffer);
 		memset(uart1_rx_buffer, 0, UART1_DMA_RX_BUFFER_SIZE);
-		debug_p("UART1 receiver task notified\n");
+		debug_info("UART1 receiver task notified\n");
 		vTaskDelay(0);
 	}
 }
