@@ -25,7 +25,7 @@ void uart1_data_received(uint8_t* databuffer, uint32_t position,
 			eSetValueWithoutOverwrite, NULL);
 }
 
-extern void thread_uart1_receiver() {
+extern void thread_cmdline() {
 	mw_uart1_dma_init(UART1_BAUD_RATE, uart1_data_received);
 	debug_p("UART1 initialized BR: %i\n", UART1_BAUD_RATE);
 

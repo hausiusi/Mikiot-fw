@@ -27,7 +27,7 @@ typedef struct startup_task {
 
 void thread_init();
 void thread_test();
-void thread_uart1_receiver();
+void thread_cmdline();
 void thread_taskmgr();
 
 /* @formatter:off */
@@ -36,7 +36,7 @@ startup_task_t startup_tasks[] =
 {
 		{.result = 0, .thread = thread_init, .name = "Init", .stack_depth = configMINIMAL_STACK_SIZE, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_test, .name = "Test", .stack_depth = 256, .parameters = NULL, .priority = 1},
-		{.result = 0, .thread = thread_uart1_receiver, .name = "Uart1 Rx", .stack_depth = 256, .parameters = NULL, .priority = 1},
+		{.result = 0, .thread = thread_cmdline, .name = "Uart1 Rx", .stack_depth = 256, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_taskmgr, .name = "Taskmgr", .stack_depth = 512, .parameters = NULL, .priority = 1},
 };
 
