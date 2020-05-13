@@ -6,6 +6,7 @@
  */
 
 #include <string.h>
+#include <ctype.h>
 #include "cmdline.h"
 #include "macrodefs.h"
 #include "debug.h"
@@ -66,6 +67,10 @@ static void _play_blob(void* args) {
 	for (uint32_t i = 0; i < len; i++) {
 		for (int j = 0; j < 2; j++) {
 			char c = *((char*) args++);
+			if (!isxdigit(c)) {
+				//TODO: Handle not hex digit or invalid input error
+				return;
+			}
 			/* https://stackoverflow.com/questions/10156409/convert-hex-string-char-to-int */
 			char val = ((c & 0xF) + (c >> 6)) | ((c >> 3) & 0x8);
 			blob_bytes[i] = (blob_bytes[i] << 4) | (uint8_t) val;
