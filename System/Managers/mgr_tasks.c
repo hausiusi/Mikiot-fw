@@ -65,3 +65,7 @@ tasks_statuses_t* mgr_tasks_get_system_state() {
 			&& tasks_statuses_current;
 	return &system_tasks_state;
 }
+
+tasks_statuses_t* mgr_tasks_get_last_measured() {
+	return &system_tasks_state;
+}

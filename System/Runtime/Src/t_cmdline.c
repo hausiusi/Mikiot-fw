@@ -21,7 +21,7 @@ static uint8_t uart1_rx_buffer[UART1_DMA_RX_BUFFER_SIZE];
 void uart1_data_received(uint8_t* databuffer, uint32_t position,
 		uint32_t buf_max_len) {
 	memcpy(uart1_rx_buffer, databuffer, position);
-	xTaskNotifyFromISR(os_get_task_handler(Uart1RxHandler), 0,
+	xTaskNotifyFromISR(os_get_task_handler(CmdlineHandler), 0,
 			eSetValueWithoutOverwrite, NULL);
 }
 
