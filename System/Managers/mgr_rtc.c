@@ -29,6 +29,16 @@ void mgr_rtc_set(rtc_time_t* time, rtc_date_t* date) {
 	mw_rtc_set(&mgr_rtc_handle, time, date);
 }
 
+rtc_time_t* mgr_rtc_get_time() {
+	mw_rtc_get_time(&mgr_rtc_handle, &mgr_rtc_time);
+	return &mgr_rtc_time;
+}
+
+rtc_date_t* mgr_rtc_get_date() {
+	mw_rtc_get_date(&mgr_rtc_handle, &mgr_rtc_date);
+	return &mgr_rtc_date;
+}
+
 void mgr_rtc_set_strf(const char* dt) {
 	int day, month, year, hour, minute, second;
 	sscanf(dt, "%d-%d-%d %d:%d:%d", &day, &month, &year, &hour, &minute,

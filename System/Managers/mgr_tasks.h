@@ -22,4 +22,6 @@ typedef struct _tasks_statuses {
 
 tasks_statuses_t* mgr_tasks_get_system_state();
 
+tasks_statuses_t* mgr_tasks_get_last_measured();
+
 #endif /* MANAGERS_MGR_TASKS_H_ */
