@@ -14,6 +14,7 @@
 #include "mw_rtc.h"
 #include "mgr_rtc.h"
 #include "performance.h"
+#include "version.h"
 
 void toggle_taskmgr_printing();
 
@@ -25,6 +26,7 @@ static void _taskmgr(void* args);
 static void _time(void* args);
 static void _perfinfo(void* args);
 static void _dbglevel(void* args);
+static void _version(void* args);
 
 #define CMD_BLOB_MAX_SIZE 		64 /* Maximum accepted command-line length for blob */
 static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
@@ -39,6 +41,7 @@ static cmd_struct_t commands[] = {
 	{ "time", _time, "Measures command execution time" },
 	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
 	{ "debuglevel", _dbglevel, "Gets or sets debug level" },
+	{ "version", _version, "Prints current version" },
 };
 /* @formatter:on */
 
@@ -52,6 +55,12 @@ static void _help(void* args) {
 		debug_p("%s - %s\n", commands[i].cmd, commands[i].help);
 	}
 	debug_p("--------------------------\n");
+}
+
+static void _version(void* args) {
+	debug_p("Version: %i.%i.%i\nCode name: %s\nRelease date: %s\n",
+			VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_CODE_NAME,
+			VERSION_RELEASE_DATE);
 }
 
 static void _play_blob(void* args) {
