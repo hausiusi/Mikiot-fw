@@ -11,6 +11,7 @@
 #include "macrodefs.h"
 #include "debug.h"
 #include "bp_player.h"
+#include "error.h"
 #include "mw_rtc.h"
 #include "mgr_rtc.h"
 #include "performance.h"
@@ -71,7 +72,7 @@ static void _play_blob(void* args) {
 	 * blob 15 00 00 00 00 00 04 00 AA 10 00 00 00 00 04 00 AA 02 00 00 11 */
 	uint32_t len = (strlen(args) / 3) + 1;
 	if (len > CMD_BLOB_MAX_SIZE) {
-		//TODO: Handle CMD blob size error here
+		error_report(5, CmdlineError);
 		return;
 	}
 
@@ -79,7 +80,7 @@ static void _play_blob(void* args) {
 		for (int j = 0; j < 2; j++) {
 			char c = *((char*) args++);
 			if (!isxdigit(c)) {
-				//TODO: Handle not hex digit or invalid input error
+				error_report(6, CmdlineError);
 				return;
 			}
 			/* https://stackoverflow.com/questions/10156409/convert-hex-string-char-to-int */
