@@ -19,6 +19,7 @@ typedef enum task_index {
 	CmdlineHandler,
 	TaskMgrHandler,
 	OverallStateMonitorHandler,
+	IoMgrHandler
 }task_index_enum_t;
 
 /* @formatter:on */
