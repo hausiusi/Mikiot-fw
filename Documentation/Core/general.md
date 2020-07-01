@@ -1,4 +1,4 @@
 Core
 =====
 
-Contains main.c, main.h, freeRTOS config and HAL config files
+Contains main.c, main.h, ioconfig.h, freeRTOS and HAL configuration files
