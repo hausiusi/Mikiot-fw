@@ -32,5 +32,6 @@ void mw_uart1_dma_string_transmit(char* text);
 /*
  * Transfers data via UART3 (PD8) using DMA
  * */
+void mw_uart1_dma_data_transmit(uint8_t* data, uint32_t length);
 
 #endif /* INC_MW_UART1_H_ */
