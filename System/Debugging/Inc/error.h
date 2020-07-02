@@ -18,7 +18,10 @@ typedef enum {
 	InitError = 0,
 	SetupError = 1,
 	WriteError = 2,
-	ReadError = 3
+	ReadError = 3,
+	VerificationError = 4,
+	CmdlineError = 5,
+	BlobProcessorError = 6,
 } error_enum_t;
 // @formatter:on
 typedef struct {

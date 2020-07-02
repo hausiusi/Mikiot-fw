@@ -4,9 +4,10 @@
  *  Created on: Jan 30, 2020
  *      Author: Zviad
  */
+#include <stddef.h>
 #include "bp_helper.h"
 #include "defines.h"
-#include <stddef.h>
+#include "error.h"
 
 blob_fp_t* bp_actions;
 blob_fp_t* bp_operators;
@@ -35,11 +36,11 @@ blob_fp_t bp_groups_get_actual_function(bp_groups_enum_t group_id,
 		groups_initialized = true;
 	}
 	if (!(group_id < COUNT(_groups))) {
-		//TODO: handle not existing group_id here
+		error_report(8, BlobProcessorError);
 		return NULL;
 	}
 	if (!(member_id < COUNT(_groups[group_id]))) {
-		//TODO: handle not existing member_id for group_id here
+		error_report(9, BlobProcessorError);
 		return NULL;
 	}
 	return _groups[group_id][member_id];

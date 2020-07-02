@@ -7,6 +7,7 @@
 
 #include "bp_helper.h"
 #include "debug.h"
+#include "error.h"
 #include "FreeRTOS.h"
 #include "mw_timebase.h"
 #include "task.h"
@@ -16,7 +17,7 @@ blob_fp_t* bp_actions;
 int _delay(blob_t* blob) {
 	debug_p("BLOB-FUNC: actions._delay\n");
 	if (blob->data.args_length != sizeof(uint32_t)) {
-		//TODO: handle error
+		error_report(7, BlobProcessorError);
 		return -1;
 	}
 	uint32_t delay_amount_ms = *((uint32_t*) blob->data.args);

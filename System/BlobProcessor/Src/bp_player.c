@@ -10,6 +10,7 @@
 #include "debug.h"
 #include "bp_helper.h"
 #include "bp_groups.h"
+#include "error.h"
 
 bool_t _verify(uint8_t* blob_bytes) {
 	//TODO: will be implemented with ISSUE_39
@@ -18,7 +19,7 @@ bool_t _verify(uint8_t* blob_bytes) {
 
 void bp_player_play(uint8_t* blob_bytes) {
 	if (!_verify(blob_bytes)) {
-		//TODO: can be printed or raised an error when handler will be ready
+		error_report(4, VerificationError);
 		return;
 	}
 	blob_t blob = { 0 };
@@ -39,7 +40,7 @@ void bp_player_play(uint8_t* blob_bytes) {
 				debug_p("BLOB-PLAYER: function execution failed\n");
 			}
 		} else {
-			//TODO: handle NULL function pointer error or exception here.
+			error_report(10, BlobProcessorError);
 			return;
 		}
 		/* Move counter to next blob->data start. */
