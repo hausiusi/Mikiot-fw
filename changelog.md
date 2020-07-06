@@ -6,6 +6,11 @@ The newest changes are on the top chronologically, the oldest - on the bottom.
 [Chick-Jumps-Off-Cliff-IOT]
 
 ---
+## [0.2.1] - 2020-07-06
+[Feathered-IOT]
+
+#### Fixed
+- NormalOpen button didn't work on the first try
 
 ## [0.2.0] - 2020-06-24
 [Feathered-IOT]
