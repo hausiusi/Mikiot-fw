@@ -46,10 +46,22 @@ static int _jump(blob_t* blob) {
 	return 0;
 }
 
+static int _print(blob_t* blob) {
+	debug_info("BLOB-FUNC: actions._print\n");
+	blob->counter += blob->data.args_length;
+	if (blob->data.args[blob->data.args_length - 1] != 0) {
+		error_report(12, BlobProcessorError);
+		return -1;
+	}
+	debug_p("%s\n", (char* )blob->data.args);
+	return 0;
+}
+
 /* @formatter:off */
 static const blob_fp_t _actions[] = {
 	_delay,
 	_jump,
+	_print
 };
 /* @formatter:on */
 

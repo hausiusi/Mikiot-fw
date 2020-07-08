@@ -15,3 +15,4 @@ Error table
 |  009 | BlobProcessorError | Couldn't find provided member id                                                                    |
 |  010 | BlobProcessorError | BLOB funcion pointer couldn't find (is NULL)                                                        |
 |  011 | BlobProcessorError | Jump requires 16 bit long argument for delay. The length or arguments must be exactly 2 bytes long  |
+|  012 | BlobProcessorError | Print function checks if provided string has terminator, by checking if arglength - 1 index is null |
