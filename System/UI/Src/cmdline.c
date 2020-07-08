@@ -29,7 +29,7 @@ static void _perfinfo(void* args);
 static void _dbglevel(void* args);
 static void _version(void* args);
 
-#define CMD_BLOB_MAX_SIZE 		64 /* Maximum accepted command-line length for blob */
+#define CMD_BLOB_MAX_SIZE 		128 /* Maximum accepted command-line length for blob */
 static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
 
 /* @formatter:off */

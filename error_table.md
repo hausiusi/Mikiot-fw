@@ -14,3 +14,4 @@ Error table
 |  008 | BlobProcessorError | Couldn't find provided group id                                                                     |
 |  009 | BlobProcessorError | Couldn't find provided member id                                                                    |
 |  010 | BlobProcessorError | BLOB funcion pointer couldn't find (is NULL)                                                        |
+|  011 | BlobProcessorError | Jump requires 16 bit long argument for delay. The length or arguments must be exactly 2 bytes long  |

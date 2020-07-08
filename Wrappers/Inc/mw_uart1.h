@@ -12,7 +12,7 @@
 
 /* Defines */
 
-#define UART1_DMA_RX_BUFFER_SIZE 128
+#define UART1_DMA_RX_BUFFER_SIZE 512
 #define UART1_DMA_TX_BUFFER_SIZE 512
 
 typedef void (*dma_buff_acquire_t)(uint8_t* databuffer, uint32_t position,
