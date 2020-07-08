@@ -33,9 +33,23 @@ static int _delay(blob_t* blob) {
 	return 0;
 }
 
+static int _jump(blob_t* blob) {
+	debug_info("BLOB-FUNC: actions._jump\n");
+	blob->counter += blob->data.args_length;
+	if (blob->data.args_length != sizeof(uint16_t)) {
+		error_report(11, BlobProcessorError);
+		return -1;
+	}
+	uint16_t jump_to = *((uint16_t*) blob->data.args);
+	debug_info("Jump to: %i\n", jump_to);
+	blob->counter = jump_to;
+	return 0;
+}
+
 /* @formatter:off */
 static const blob_fp_t _actions[] = {
 	_delay,
+	_jump,
 };
 /* @formatter:on */
 
