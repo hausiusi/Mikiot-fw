@@ -6,13 +6,15 @@
  */
 
 #include "bp_helper.h"
+#include "macrodefs.h"
 
-blob_fp_t* bp_inits;
+bfp_array_t bp_inits;
 
 static const blob_fp_t _inits[] = {
 
 };
 
 extern void bpt_inits_init() {
-	bp_inits = (blob_fp_t*) _inits;
+	bp_inits.functions = (blob_fp_t*) _inits;
+	bp_inits.len = array_count(_inits);
 }

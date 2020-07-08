@@ -26,6 +26,11 @@ typedef struct _blob {
 
 typedef int (*blob_fp_t)(blob_t*);
 
+typedef struct {
+	blob_fp_t* functions; /* Pointer to blob functions array */
+	uint32_t len; /* Length of parent array where this functions are placed */
+} bfp_array_t; /* array of blob function pointers */
+
 /* @formatter:off */
 typedef enum {
 	BpgActions = 0,
@@ -38,11 +43,11 @@ typedef enum {
 /* @formatter:on */
 
 /* Pointers to functions of different groups */
-extern blob_fp_t* bp_actions;
-extern blob_fp_t* bp_operators;
-extern blob_fp_t* bp_inits;
-extern blob_fp_t* bp_inouts;
-extern blob_fp_t* bp_params;
+bfp_array_t bp_actions;
+bfp_array_t bp_operators;
+bfp_array_t bp_inits;
+bfp_array_t bp_inouts;
+bfp_array_t bp_params;
 
 /* Group initializers */
 extern void bpt_actions_init();
