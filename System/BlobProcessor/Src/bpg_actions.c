@@ -17,6 +17,7 @@ bfp_array_t bp_actions;
 
 static int _delay(blob_t* blob) {
 	debug_info("BLOB-FUNC: actions._delay\n");
+	blob->counter += blob->data.args_length;
 	if (blob->data.args_length != sizeof(uint32_t)) {
 		error_report(7, BlobProcessorError);
 		return -1;

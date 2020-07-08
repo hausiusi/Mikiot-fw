@@ -30,7 +30,7 @@ void bp_player_play(uint8_t* blob_bytes) {
 	while ((blob.counter) < (blob.length - 2)) {
 		blob.data = *(blob_data_t*) (blob_bytes + blob.counter);
 		/* Initialize pointer of blob->data arguments every time. */
-		blob.counter += offsetof(blob_data_t, args);
+		blob.counter += offsetof(blob_data_t, args); // Skip bad function nicely
 		blob.data.args = blob_bytes + blob.counter;
 		blob_fp_t bfp = bp_groups_get_actual_function(
 				(bp_groups_enum_t) blob.data.group_id, blob.data.member_id);
@@ -43,7 +43,5 @@ void bp_player_play(uint8_t* blob_bytes) {
 			error_report(10, BlobProcessorError);
 			return;
 		}
-		/* Move counter to next blob->data start. */
-		blob.counter += blob.data.args_length;
 	}
 }
