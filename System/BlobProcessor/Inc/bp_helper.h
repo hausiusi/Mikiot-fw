@@ -49,6 +49,9 @@ bfp_array_t bp_inits;
 bfp_array_t bp_inouts;
 bfp_array_t bp_params;
 
+/* The last blob processor function exit code */
+int bpf_exit_code;
+
 /* Group initializers */
 extern void bpt_actions_init();
 extern void bpt_conditions_init();

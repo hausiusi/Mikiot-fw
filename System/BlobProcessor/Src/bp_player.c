@@ -37,8 +37,8 @@ void bp_player_play(uint8_t* blob_bytes) {
 		blob_fp_t bfp = bp_groups_get_actual_function(
 				(bp_groups_enum_t) blob.data.group_id, blob.data.member_id);
 		if (bfp) {
-			uint8_t exit_code = bfp(&blob);
-			if (exit_code != 0) {
+			bpf_exit_code = bfp(&blob);
+			if (bpf_exit_code != 0) {
 				debug_p("BLOB-PLAYER: function execution failed\n");
 			}
 		} else {
