@@ -16,3 +16,5 @@ Error table
 |  010 | BlobProcessorError | BLOB funcion pointer couldn't find (is NULL)                                                        |
 |  011 | BlobProcessorError | Jump requires 16 bit long argument for delay. The length or arguments must be exactly 2 bytes long  |
 |  012 | BlobProcessorError | Print function checks if provided string has terminator, by checking if arglength - 1 index is null |
+|  013 | BlobProcessorError | snilfe operator requires arguments length to be 4 bytes long (the same as function exit code        |
+|  014 | BlobProcessorError | If operator requires 10 bytes long arguments.                                                       |
