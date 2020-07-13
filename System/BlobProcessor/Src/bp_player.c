@@ -6,6 +6,7 @@
  */
 
 #include <inttypes.h>
+#include <string.h>
 #include "defines.h"
 #include "debug.h"
 #include "bp_helper.h"
@@ -28,7 +29,8 @@ void bp_player_play(uint8_t* blob_bytes) {
 	/* Skip blob length-bytes (4) and never process checksum-bytes (2). */
 	blob.counter += offsetof(blob_t, data); // Start from blob->data.
 	while ((blob.counter) < (blob.length - 2)) {
-		blob.data = *(blob_data_t*) (blob_bytes + blob.counter);
+		memcpy((uint8_t*) &blob.data, blob_bytes + blob.counter,
+				sizeof(blob_data_t));
 		/* Initialize pointer of blob->data arguments every time. */
 		blob.counter += offsetof(blob_data_t, args); // Skip bad function nicely
 		blob.data.args = blob_bytes + blob.counter;
