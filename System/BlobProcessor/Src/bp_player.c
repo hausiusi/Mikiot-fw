@@ -6,6 +6,7 @@
  */
 
 #include <inttypes.h>
+#include <string.h>
 #include "defines.h"
 #include "debug.h"
 #include "bp_helper.h"
@@ -28,15 +29,16 @@ void bp_player_play(uint8_t* blob_bytes) {
 	/* Skip blob length-bytes (4) and never process checksum-bytes (2). */
 	blob.counter += offsetof(blob_t, data); // Start from blob->data.
 	while ((blob.counter) < (blob.length - 2)) {
-		blob.data = *(blob_data_t*) (blob_bytes + blob.counter);
+		memcpy((uint8_t*) &blob.data, blob_bytes + blob.counter,
+				sizeof(blob_data_t));
 		/* Initialize pointer of blob->data arguments every time. */
 		blob.counter += offsetof(blob_data_t, args); // Skip bad function nicely
 		blob.data.args = blob_bytes + blob.counter;
 		blob_fp_t bfp = bp_groups_get_actual_function(
 				(bp_groups_enum_t) blob.data.group_id, blob.data.member_id);
 		if (bfp) {
-			uint8_t exit_code = bfp(&blob);
-			if (exit_code != 0) {
+			bpf_exit_code = bfp(&blob);
+			if (bpf_exit_code != 0) {
 				debug_p("BLOB-PLAYER: function execution failed\n");
 			}
 		} else {
