@@ -128,7 +128,7 @@ void debugf(const char* str_buff, ...) {
 		}
 	}
 	va_end(ap);
-	mw_uart1_dma_string_transmit(dbg_buff);
+	debug_put_log(dbg_buff);
 }
 
 void debug_set_level(int level) {
