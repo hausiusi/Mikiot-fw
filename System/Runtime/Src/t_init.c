@@ -9,6 +9,7 @@
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "mikiot_config.h"
 #include "mw_clock.h"
 #include "mw_timebase.h"
 #include "mw_uart1.h"
@@ -42,22 +43,20 @@ extern void thread_init() {
 	}
 }
 
+#if (COMPILE_WITH_UNIT_TESTS == 1)
+#include "test_framework.h"
+void test_incorrect_blob();
+#endif
+
 /* Thread is created to test new features */
 extern void thread_test() {
 	for (int a = 0; a < 1000000; a++) {
-		asm("NOP");
+		vTaskDelay(0);
 	}
-	//int mhz = 30;
-
-	/**/
-
+#if (COMPILE_WITH_UNIT_TESTS == 1)
+	tf_run(test_incorrect_blob());
+#endif
 	for (;;) {
-		//		tmp = HAL_RCC_GetPCLK2Freq();
-		//		sysclk = HAL_RCC_GetSysClockFreq();
-		//		mw_internal_clock_init();
-		//		mw_external_clock_init(mhz--);
-		//		mw_uart1_init(9600, uart_idle_detected);
-
 		vTaskDelay(1000);
 	}
 }
