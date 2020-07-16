@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <mw_uart1.h>
 #include "mw_redefines.h"
+#include "mikiot_config.h"
 
 #define DBG_ANY     1 // Should not be set. Is used for comparison to print anything when any debug level is enabled.
 #define DBG_ERROR   1
@@ -22,10 +23,9 @@
 #define DBG_NOTE    3
 #define DBG_INFO    4
 
-#define DEBUG_ON 1
-#define DEBUG_BUFFER_SIZE 128
+#define DEBUG_ON                    1
+#define DEBUG_BUFFER_SIZE           MCONF_DEBUG_BUFFER_SIZE
 
-char trace_dbg_buf[DEBUG_BUFFER_SIZE];
 int debug_level;
 
 // TODO: implement this idea, keep traces in ringbuffer and print them
@@ -40,8 +40,7 @@ int debug_get_level();
 #if (DEBUG_ON == 1)
 
 // TODO: implement this idea, keep traces in ringbuffer and print them
-#define debug_trace(str_format, vargs...) do { sprintf(trace_dbg_buf, str_format, ##vargs); \
-											 	 put_trace_text(trace_dbg_buf); } while(0)
+//#define debug_trace(str_format, vargs...) do { sprintf(trace_dbg_buf, str_format, ##vargs); put_trace_text(trace_dbg_buf); } while(0)
 
 #define debug_info(str_format, vargs...) do { if (debug_level >= DBG_INFO) debugf("INFO: "str_format, ##vargs); } while(0)
 #define debug_note(str_format, vargs...) do { if (debug_level >= DBG_NOTE) debugf("NOTE: "str_format, ##vargs); } while(0)
