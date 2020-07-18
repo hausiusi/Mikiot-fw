@@ -16,11 +16,11 @@ bfp_array_t bp_operators;
 int _if(blob_t* blob) {
 	debug_info("BLOB-FUNC: operators._if\n");
 	// Skip first 10 bytes
-	blob->counter += blob->data.args_length;
 	if (blob->data.args_length != 10) {
 		error_report(14, BlobProcessorError);
 		return -1;
 	}
+	blob->counter += blob->data.args_length;
 	// Group id and member id are first two bytes of args
 	int32_t expect = *(int32_t*) (blob->data.args);
 	uint16_t jump_to = *(uint16_t*) (blob->data.args + 4);
@@ -41,11 +41,11 @@ int _if(blob_t* blob) {
  */
 int _snilfe(blob_t* blob) {
 	debug_info("BLOB-FUNC: operators._snilfe\n");
-	blob->counter += blob->data.args_length;
 	if (blob->data.args_length != sizeof(int32_t)) {
 		error_report(13, BlobProcessorError);
 		return -1;
 	}
+	blob->counter += blob->data.args_length;
 	int exit_code = *((int*) blob->data.args);
 	if (exit_code == bpf_exit_code) {
 		// Skip next function data part completely

@@ -18,6 +18,15 @@ bool_t _verify(uint8_t* blob_bytes) {
 	return true;
 }
 
+void _collect_and_log_failure_details(blob_t* blob) {
+	debug_p("BLOB-PROCESSOR failure details\n");
+	debug_p("Length: %i\n", blob->length);
+	debug_p("Failed at: %i\n", blob->counter);
+	debug_p("Last  gid: %i fid: %i\n", blob->data.group_id,
+			blob->data.member_id);
+	debug_p("Arguments length: %i\n", blob->data.args_length);
+}
+
 void bp_player_play(uint8_t* blob_bytes) {
 	if (!_verify(blob_bytes)) {
 		error_report(4, VerificationError);
@@ -40,6 +49,7 @@ void bp_player_play(uint8_t* blob_bytes) {
 			bpf_exit_code = bfp(&blob);
 			if (bpf_exit_code == -1) {
 				debug_p("BLOB-PLAYER: function execution failed\n");
+				_collect_and_log_failure_details(&blob);
 				return;
 			}
 		} else {
