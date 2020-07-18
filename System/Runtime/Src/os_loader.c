@@ -38,7 +38,7 @@ startup_task_t startup_tasks[] =
 {
 		{.result = 0, .thread = thread_init, .name = "Init", .stack_depth = configMINIMAL_STACK_SIZE, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_test, .name = "Test", .stack_depth = 256, .parameters = NULL, .priority = 1},
-		{.result = 0, .thread = thread_cmdline, .name = "Uart1 Rx", .stack_depth = 256, .parameters = NULL, .priority = 1},
+		{.result = 0, .thread = thread_cmdline, .name = "CMD line", .stack_depth = 512, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_taskmgr, .name = "Taskmgr", .stack_depth = 512, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_overal_state_monitor, .name = "Overall", .stack_depth = 256, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_iomgr, .name = "IOmgr", .stack_depth = 128, .parameters = NULL, .priority = 1}
