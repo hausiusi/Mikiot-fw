@@ -1,7 +1,7 @@
-#include <os_loader.h>
 #include <stdio.h>
-#include "Wrappers/Inc/mw_redefines.h"
 #include "mw_clock.h"
+#include "mw_redefines.h"
+#include "os_loader.h"
 
 /**
  * @brief  The application entry point.
