@@ -5,16 +5,19 @@
  *      Author: Zviad
  */
 
-#include <string.h>
 #include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 #include "cmdline.h"
 #include "macrodefs.h"
 #include "debug.h"
 #include "bp_player.h"
 #include "error.h"
 #include "mw_rtc.h"
+#include "mgr_adc.h"
 #include "mgr_rtc.h"
 #include "performance.h"
+#include "utils.h"
 #include "version.h"
 
 void toggle_taskmgr_printing();
@@ -25,12 +28,14 @@ static void _play_blob(void* args);
 static void _datetime(void* args);
 static void _taskmgr(void* args);
 static void _time(void* args);
+static void _adc(void* args);
 static void _perfinfo(void* args);
 static void _dbglevel(void* args);
 static void _version(void* args);
 
 #define CMD_BLOB_MAX_SIZE 		128 /* Maximum accepted command-line length for blob */
 static uint8_t blob_bytes[CMD_BLOB_MAX_SIZE];
+#define CMD_ADC_REF_VOLTAGE 3.0f
 
 /* @formatter:off */
 static cmd_struct_t commands[] = {
@@ -40,6 +45,7 @@ static cmd_struct_t commands[] = {
 	{ "datetime", _datetime, "Sets or gets datetime"},
 	{ "taskmgr", _taskmgr, "Starts or stops task manager"},
 	{ "time", _time, "Measures command execution time" },
+	{ "adc", _adc, "Measures voltage on PB0" },
 	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
 	{ "debuglevel", _dbglevel, "Gets or sets debug level" },
 	{ "version", _version, "Prints current version" },
@@ -115,6 +121,82 @@ static void _time(void* args) {
 	debug_p("PERF: Measuring execution time for: '%s'\n", (char* )args);
 	uint32_t time_us = prf_func_exect_time_get(cmd_process(args));
 	debug_p("PERF: Execution took %lu us\n", time_us);
+}
+
+static char* _move_to_next_word(char* str, char* out_word, int max_len) {
+	if (*str == '\0') {
+		return NULL;
+	}
+	int len = 0;
+	do {
+		if (*str == ' ') {
+			str++;
+			break;
+		}
+		*out_word = *str;
+		out_word++;
+		if (++len > max_len) {
+			debug_error("Argument must be shorter than %i characters\n",
+					max_len);
+			return NULL;
+		}
+	} while (*str++);
+	*out_word = '\0';
+	return str;
+}
+
+static void _adc(void* args) {
+	adc_uiconf_t* adc_uiconf = mgr_adc_get_uiconf();
+	adc_uiconf->ref_voltage = CMD_ADC_REF_VOLTAGE;
+	adc_uiconf->permanent = true;
+	char out_word[10] = { 0 };
+	char* wordptr = args;
+	int arg_counter = 0;
+	while (wordptr = _move_to_next_word(wordptr, out_word, 9), wordptr != NULL) {
+		if (!strncmp(out_word, "start", 5)) {
+			arg_counter++;
+			mgr_adc_init();
+		} else if (!strncmp(out_word, "stop", 4)) {
+			mgr_adc_deinit();
+			arg_counter++;
+		} else if (!strncmp(out_word, "value", 5)) {
+			arg_counter++;
+			adc_uiconf->print_value = true;
+		} else if (!strncmp(out_word, "voltage", 7)) {
+			arg_counter++;
+			adc_uiconf->print_voltage = true;
+		} else if (!strncmp(out_word, "delay", 5)) {
+			arg_counter++;
+			wordptr = _move_to_next_word(wordptr, out_word, 9);
+			bool_t is_ok = wordptr != NULL && is_integer(out_word);
+			if (!is_ok) {
+				debug_error("Argument `delay` must be followed by number\n");
+				return;
+			}
+			adc_uiconf->delay = atoi(out_word);
+		} else if (!strncmp(out_word, "amount", 6)) {
+			arg_counter++;
+			wordptr = _move_to_next_word(wordptr, out_word, 9);
+			bool_t is_ok = wordptr != NULL && is_integer(out_word);
+			if (!is_ok) {
+				debug_error("Argument `amount` must be followed by number\n");
+				return;
+			}
+			adc_uiconf->amount = atoi(out_word);
+			adc_uiconf->permanent = false;
+		}
+	}
+	if (!arg_counter) {
+		debug_p("The adc command requires arguments:\n");
+		debug_p("    start   - starts the ADC conversions if it is stopped\n");
+		debug_p("    stop    - stops the ADC conversions if it is started\n");
+		debug_p("    value   - shows the converted value\n");
+		debug_p("    voltage - converts ADC value into voltage\n");
+		debug_p(
+				"    delay   - delays between prints by the number followed after\n");
+		debug_p(
+				"    amount  - number of processed before the automatic deinitialization\n");
+	}
 }
 
 static void _dbglevel(void* args) {
