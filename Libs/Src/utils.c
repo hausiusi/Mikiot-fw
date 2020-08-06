@@ -4,6 +4,7 @@
  *  Created on: Apr 19, 2020
  *      Author: Zviad
  */
+#include <ctype.h>
 #include "utils.h"
 
 int unumlen(uint32_t x) {
@@ -52,6 +53,18 @@ void* find(void* collection, void* item, uint32_t item_size, uint32_t count) {
 bool_t equals(void* item1, void* item2, uint32_t item_size) {
 	for (uint32_t i = 0; i < item_size; i++) {
 		if (*((uint8_t*) (item1 + i)) != *((uint8_t*) (item2 + i))) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool_t is_integer(char* str) {
+	if (*str == '-') {
+		str++;
+	}
+	while (*str && *str != ' ') {
+		if (!isdigit(*str++)) {
 			return false;
 		}
 	}

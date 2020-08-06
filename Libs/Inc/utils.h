@@ -23,4 +23,6 @@ void* find(void* collection, void* item, uint32_t item_size, uint32_t count);
 
 bool_t equals(void* item1, void* item2, uint32_t item_size);
 
+bool_t is_integer(char* str);
+
 #endif /* INC_UTILS_H_ */
