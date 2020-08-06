@@ -49,9 +49,9 @@ int debug_get_level();
 #define debug_p(str_format, vargs...) do { if (debug_level >= DBG_ANY) debugf(str_format, ##vargs); } while(0)
 
 #else
-#define debug_trace(str_format, vargs...)
-#define debug_print(str_format, vargs...)
-#define debug_notify(str_format, vargs...)
+//#define debug_trace(str_format, vargs...)
+#define debug_p(str_format, vargs...)
+#define debug_note(str_format, vargs...)
 #define debug_warn(str_format, vargs...)
 #define debug_error(str_format, vargs...)
 #endif

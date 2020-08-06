@@ -5,12 +5,13 @@
  *      Author: Zviad
  */
 
-#include <string.h>
-#include <stdarg.h>
 #include <ctype.h>
+#include <math.h>
+#include <stdarg.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "debug.h"
 #include "macrodefs.h"
 
@@ -91,6 +92,48 @@ static inline void _c(char** buff_ptr, va_list* ap) {
 	(*buff_ptr)++;
 }
 
+static inline void _f(char** buff_ptr, va_list* ap) {
+	double d;
+	d = va_arg(*ap, double);
+	char padding[3] = { 0 };
+	int whole = (int) d;
+	double rest = d - whole;
+	rest *= 1000;
+	int frac = abs((int) rest);
+	if (d < 0) {
+		**buff_ptr = '-';
+		(*buff_ptr)++;
+	}
+	whole = abs(whole);
+	if (frac < 10) {
+		padding[0] = '0';
+		padding[1] = '0';
+	} else if (frac < 100) {
+		padding[0] = '0';
+	}
+	// Printing into the buffer
+	char str[11];
+	itoa(whole, str, 10);
+	char* str_ptr = str;
+	while (*str_ptr) {
+		**buff_ptr = *str_ptr++;
+		(*buff_ptr)++;
+	}
+	**buff_ptr = '.';
+	(*buff_ptr)++;
+	str_ptr = padding;
+	while (*str_ptr) {
+		**buff_ptr = *str_ptr++;
+		(*buff_ptr)++;
+	}
+	utoa(frac, str, 10);
+	str_ptr = str;
+	while (*str_ptr) {
+		**buff_ptr = *str_ptr++;
+		(*buff_ptr)++;
+	}
+}
+
 /* @formatter:off */
 static formats_t formats[] = {
 		{"lu", _lu},
@@ -101,6 +144,7 @@ static formats_t formats[] = {
 		{"p", _p},
 		{"s", _s},
 		{"c", _c},
+		{"f", _f},
 };
 /* @formatter:on */
 
