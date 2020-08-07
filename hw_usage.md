@@ -6,6 +6,7 @@ Describes the hardware which is used what for
 - [UARTS](#uarts)
 - [RTC](#rtc)
 - [Systick](#systick-timer)
+- [ADC](#adc)
 
 ## Timers<div name="timers"/>
 - [TIM4](./Debugging/Src/performance.c)
@@ -36,3 +37,9 @@ Describes the hardware which is used what for
     - **IO:** N/A
     - **Purpose:** OS system tick
     - **Speed:** 1000Hz
+
+## ADC<div id="adc"/>
+- [adc1](./Wrappers/Src/mw_adc.c)
+    - **IO:** IN1 - PB0
+    - **Purpose:** Measure analog signal (can be checked from CLI: adc start voltage delay 1000)
+    - **Resolution:** 12b
