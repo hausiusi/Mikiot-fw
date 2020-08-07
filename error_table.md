@@ -17,4 +17,7 @@ Error table
 |  011 | BlobProcessorError | Jump requires 16 bit long argument for delay. The length or arguments must be exactly 2 bytes long  |
 |  012 | BlobProcessorError | Print function checks if provided string has terminator, by checking if arglength - 1 index is null |
 |  013 | BlobProcessorError | snilfe operator requires arguments length to be 4 bytes long (the same as function exit code        |
-|  014 | BlobProcessorError | If operator requires 10 bytes long arguments.                                                       |
+|  014 | BlobProcessorError | If operator requires 10 bytes long arguments                                                        |
+|  015 | AdcError           | ADC initialization failed                                                                           |
+|  016 | AdcError           | ADC channel configuration failed                                                                    |
+|  017 | AdcError           | ADC error callback detected. DMA will be restarted                                                  |
