@@ -32,9 +32,9 @@ extern void thread_adc() {
 	uint32_t notify_value = 0;
 	uint32_t notified = pdFALSE;
 	for (;;) {
-		// Switch context until ADC is off
-		while (!adc_uiconf->initialized) {
-			vTaskDelay(0);
+		// Suspend thread if ADC is off
+		if (!adc_uiconf->initialized) {
+			vTaskSuspend(NULL);
 		}
 		notified = xTaskNotifyWait(pdFALSE, /* Don't clear bits on entry. */
 		ULONG_MAX, /* Clear all bits on exit. */

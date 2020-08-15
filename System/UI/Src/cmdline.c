@@ -16,6 +16,7 @@
 #include "mw_rtc.h"
 #include "mgr_adc.h"
 #include "mgr_rtc.h"
+#include "os_loader.h"
 #include "performance.h"
 #include "utils.h"
 #include "version.h"
@@ -156,6 +157,7 @@ static void _adc(void* args) {
 		if (!strncmp(out_word, "start", 5)) {
 			arg_counter++;
 			mgr_adc_init();
+			vTaskResume(os_get_task_handler(AdcHandler));
 		} else if (!strncmp(out_word, "stop", 4)) {
 			mgr_adc_deinit();
 			arg_counter++;
