@@ -24,4 +24,25 @@ typedef RTC_TimeTypeDef rtc_time_t;
 typedef RTC_DateTypeDef rtc_date_t;
 typedef TIM_HandleTypeDef tim_handle_t;
 
+/* Mikiot wrapper types */
+
+typedef struct {
+	GPIO_TypeDef* gpiox;
+	uint16_t pin;
+	uint32_t mode;
+	uint32_t pull;
+} gpio_t;
+
+typedef struct {
+	uint16_t irq;
+	uint32_t preempt_priority;
+	uint32_t sub_priority;
+} nvic_param_t;
+
+typedef struct {
+	GPIO_TypeDef* gpiox; /* Specifies the GPIO port to be configured.
+	 This parameter can be any available GPIO_port */
+	GPIO_InitTypeDef init; /* GPIO configuration structure */
+} gpio_init_t;
+
 #endif /* MW_REDEFINES_H_ */
