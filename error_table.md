@@ -21,3 +21,6 @@ Error table
 |  015 | AdcError           | ADC initialization failed                                                                           |
 |  016 | AdcError           | ADC channel configuration failed                                                                    |
 |  017 | AdcError           | ADC error callback detected. DMA will be restarted                                                  |
+|  018 | UartError          | Required UART device doesn't exist to enable clock                                                  |
+|  019 | UartError          | Required UART device doesn't exist to configure DMA                                                 |
+|  020 | UartError          | Required UART device doesn't exist to get the config                                                |
