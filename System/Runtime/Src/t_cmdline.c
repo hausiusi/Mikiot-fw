@@ -7,14 +7,12 @@
 
 #include <inttypes.h>
 #include <limits.h>
-#include "string.h"
+#include <mw_uart.h>
+#include <string.h>
+#include "cmdline.h"
+#include "os_loader.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "mw_uart1.h"
-#include "os_loader.h"
-#include "cmdline.h"
-
-#define UART1_BAUD_RATE			115200U
 
 static uint8_t uart1_rx_buffer[UART1_DMA_RX_BUFFER_SIZE];
 
@@ -26,9 +24,10 @@ void uart1_data_received(uint8_t* databuffer, uint32_t position,
 }
 
 extern void thread_cmdline() {
-	mw_uart1_dma_init(UART1_BAUD_RATE, uart1_data_received);
-	debug_info("UART1 initialized BR: %i\n", UART1_BAUD_RATE);
-
+	uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart1ConfigIndex);
+	conf->rec_data_process = uart1_data_received;
+	mw_uart_dma_init(conf);
+	debug_info("UART1 initialized BR: %i\n", conf->uart.Init.BaudRate);
 	uint32_t notify_value = 0;
 	for (;;) {
 		static UBaseType_t watermark_current = 0;

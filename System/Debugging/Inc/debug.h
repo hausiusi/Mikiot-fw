@@ -13,7 +13,7 @@
 #endif
 
 #include <stdio.h>
-#include <mw_uart1.h>
+#include <mw_uart.h>
 #include "mw_redefines.h"
 #include "mikiot_config.h"
 

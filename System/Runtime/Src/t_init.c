@@ -5,6 +5,7 @@
  *      Author: Zviad
  */
 
+#include <mw_uart.h>
 #include "mw_redefines.h"
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
@@ -12,7 +13,6 @@
 #include "mikiot_config.h"
 #include "mw_clock.h"
 #include "mw_timebase.h"
-#include "mw_uart1.h"
 #include "debug.h"
 #include "mgr_rtc.h"
 #include "error.h"
