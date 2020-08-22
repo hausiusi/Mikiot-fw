@@ -22,7 +22,7 @@ Describes the hardware which is used what for
 
 ## UARTS<div id="uarts"/>
 - [UART1](./Wrappers/Src/mw_uart1.c)
-    - **IO:** Tx - GPIOA6, Rx - GPIOA7
+    - **IO:** Tx - GPIOB6, Rx - GPIOB7
     - **Purpose:** commandline input and output interface
     - **Speed:** variable (default: 115200)
 
