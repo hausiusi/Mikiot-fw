@@ -63,7 +63,7 @@ static inline void _x(char** buff_ptr, va_list* ap) {
 static inline void _p(char** buff_ptr, va_list* ap) {
 	uint32_t* number;
 	number = va_arg(*ap, uint32_t*);
-	char str[16];
+	char str[14] = {0};
 	str[0] = '<';
 	str[1] = '0';
 	str[2] = 'x';
