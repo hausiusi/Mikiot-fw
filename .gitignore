@@ -63,4 +63,4 @@ dkms.conf
 
 # Editor settings
 *.settings
-*Debug.launch
+*.launch
