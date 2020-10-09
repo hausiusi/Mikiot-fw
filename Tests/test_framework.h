@@ -14,17 +14,22 @@
 #include "mw_timebase.h"
 
 typedef struct {
-	uint32_t passed;
-	uint32_t warning;
-	uint32_t failed;
-	uint32_t start;
-	uint32_t end;
-	uint32_t elapsed;
+    uint32_t passed;
+    uint32_t warning;
+    uint32_t failed;
+    uint32_t start;
+    uint32_t end;
+    uint32_t elapsed;
 } tf_result;
 
 tf_result tf_current_results, tf_total_results;
 
-#define tf_write(frmt, vargs...)              do { debugf(frmt, ##vargs); mw_uart1_dma_string_transmit(tf_debug_array); } while(0)
+#include "mw_uart.h"
+#define tf_write(frmt, vargs...)                                            \
+    do {                                                                    \
+           debugf(frmt, ##vargs);                                           \
+           mw_uart_dma_string_transmit(Uart1ConfigIndex, tf_debug_array);   \
+    } while(0)
 
 #define tf_init_test_results()                                                             \
 	do {                                                                                   \
