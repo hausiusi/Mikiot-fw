@@ -32,6 +32,7 @@ void thread_taskmgr();
 void thread_overal_state_monitor();
 void thread_iomgr();
 void thread_adc();
+void thread_gprs();
 
 /* @formatter:off */
 
@@ -43,7 +44,8 @@ startup_task_t startup_tasks[] =
 		{.result = 0, .thread = thread_taskmgr, .name = "Taskmgr", .stack_depth = 512, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_overal_state_monitor, .name = "Overall", .stack_depth = 256, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_iomgr, .name = "IOmgr", .stack_depth = 128, .parameters = NULL, .priority = 1},
-		{.result = 0, .thread = thread_adc, .name = "ADC", .stack_depth = 128, .parameters = NULL, .priority = 1}
+		{.result = 0, .thread = thread_adc, .name = "ADC", .stack_depth = 128, .parameters = NULL, .priority = 1},
+		{.result = 0, .thread = thread_gprs, .name = "GPRS", .stack_depth = 128, .parameters = NULL, .priority = 1}
 };
 
 static void _startup_tasks_create() {

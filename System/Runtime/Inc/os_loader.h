@@ -21,6 +21,7 @@ typedef enum task_index {
 	OverallStateMonitorHandler,
 	IoMgrHandler,
 	AdcHandler,
+	GprsHandler,
 }task_index_enum_t;
 
 /* @formatter:on */
