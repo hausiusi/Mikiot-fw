@@ -25,4 +25,6 @@ bool_t equals(void* item1, void* item2, uint32_t item_size);
 
 bool_t is_integer(char* str);
 
+void strtrim(const char* src, char* dest, uint32_t dest_max);
+
 #endif /* INC_UTILS_H_ */

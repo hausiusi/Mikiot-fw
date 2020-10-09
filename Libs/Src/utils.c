@@ -5,6 +5,7 @@
  *      Author: Zviad
  */
 #include <ctype.h>
+#include <string.h>
 #include "utils.h"
 
 int unumlen(uint32_t x) {
@@ -69,4 +70,29 @@ bool_t is_integer(char* str) {
 		}
 	}
 	return true;
+}
+
+void strtrim(const char* restrict src, char* dest, uint32_t dest_max) {
+	// Use one character less than buffer length to have place for the '\0' at the end
+	dest_max -= 1;
+	memset(dest, 0, dest_max);
+	// Trim start
+	char* start = (char*) src;
+	char* end = (char*) src + (strlen(src));
+	while (isspace(*start)) {
+		start++;
+	}
+	// Trim end
+	while (!*end || isspace(*end)) {
+		end--;
+	}
+	for (uint32_t i = 0; (i < dest_max) && (start <= end); i++) {
+		*dest++ = *start++;
+	}
+	if (start < end) {
+		// End with three dots if text was longer than dest buffer
+		*(dest - 3) = '.';
+		*(dest - 2) = '.';
+		*(dest - 1) = '.';
+	}
 }
