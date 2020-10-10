@@ -64,3 +64,13 @@ dkms.conf
 # Editor settings
 *.settings
 *.launch
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
