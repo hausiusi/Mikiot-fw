@@ -123,7 +123,7 @@ static void _taskmgr(void* args) {
 
 static void _time(void* args) {
     debug_p("PERF: Measuring execution time for: '%s'\n", (char* )args);
-    uint32_t time_us = prf_func_exect_time_get(cmd_process(args));
+    uint32_t time_us = prf_func_exec_time_get(cmd_process(args));
     debug_p("PERF: Execution took %lu us\n", time_us);
 }
 
@@ -386,7 +386,7 @@ static void _gprs(void* args) {
         debug_p("    cmd     - raw command. Must be the last argument\n");
         debug_p("    debug   - debugs gprs driver. Can be on or off\n");
         debug_p("    restart - restarts gprs module using the reset pin\n");
-                /* @formatter:on */
+        /* @formatter:on */
     }
     return;
 }
