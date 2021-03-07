@@ -34,6 +34,12 @@ typedef enum {
 /* @formatter:on */
 
 typedef struct {
+    uint32_t allocated_length;
+    uint32_t max_length;
+    uint8_t* buffer;
+} uart_data_t;
+
+typedef struct {
     DMA_HandleTypeDef dma_rx;
     DMA_HandleTypeDef dma_tx;
     UART_HandleTypeDef uart;
@@ -44,10 +50,8 @@ typedef struct {
     nvic_param_t nvic_dma_tx;
     busy_buffer_t* busy_tx;
     double bit_time;
-    uint8_t* rx_buffer;
-    uint8_t* tx_buffer;
-    uint32_t rx_buffer_size;
-    uint32_t tx_buffer_size;
+    uart_data_t rx_data;
+    uart_data_t tx_data;
     dma_buff_acquire_t rec_data_process;
 } uart_dma_conf_t;
 

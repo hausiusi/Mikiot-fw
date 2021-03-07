@@ -80,10 +80,10 @@ static uart_dma_conf_t uart_dma_configs[] = {
 		.nvic_dma_tx.preempt_priority = 15,
 		.nvic_dma_tx.sub_priority = 0,
 		.busy_tx = &uart1_tx_busy_buff,
-		.rx_buffer = uart1_rx_dma_buff,
-		.tx_buffer = uart1_tx_dma_buff,
-		.rx_buffer_size = UART1_DMA_RX_BUFFER_SIZE,
-		.tx_buffer_size = UART1_DMA_TX_BUFFER_SIZE,
+		.rx_data.buffer = uart1_rx_dma_buff,
+		.tx_data.buffer = uart1_tx_dma_buff,
+		.rx_data.max_length = UART1_DMA_RX_BUFFER_SIZE,
+		.rx_data.max_length = UART1_DMA_TX_BUFFER_SIZE,
 	},
 	{
 		.uart.Instance = USART2,
@@ -133,10 +133,10 @@ static uart_dma_conf_t uart_dma_configs[] = {
 		.nvic_dma_tx.preempt_priority = 15,
 		.nvic_dma_tx.sub_priority = 0,
 		.busy_tx = &uart2_tx_busy_buff,
-		.rx_buffer = uart2_rx_dma_buff,
-		.tx_buffer = uart2_tx_dma_buff,
-		.rx_buffer_size = UART2_DMA_RX_BUFFER_SIZE,
-		.tx_buffer_size = UART2_DMA_TX_BUFFER_SIZE,
+		.rx_data.buffer = uart2_rx_dma_buff,
+		.tx_data.buffer = uart2_tx_dma_buff,
+		.rx_data.max_length = UART2_DMA_RX_BUFFER_SIZE,
+		.tx_data.max_length = UART2_DMA_TX_BUFFER_SIZE,
 	},
 };
 /* @formatter:on */
@@ -148,7 +148,7 @@ void mw_uart_dma_init(uart_dma_conf_t* conf) {
     _uart_configure(conf);
     _uart_interrupt_idle_set(conf);
     _uart_configure_dma(conf);
-    lib_busy_buffer_init(conf->busy_tx, conf->tx_buffer);
+    lib_busy_buffer_init(conf->busy_tx, conf->tx_data.buffer);
 }
 
 void mw_uart_dma_string_transmit(uart_index_enum_t uart_index, char* text) {
@@ -159,7 +159,7 @@ void mw_uart_dma_string_transmit(uart_index_enum_t uart_index, char* text) {
     __HAL_LINKDMA(&conf->uart, hdmatx, conf->dma_tx);
     HAL_DMA_Init(&conf->dma_tx);
     lib_busy_buffer_engage(conf->busy_tx, data_time_avg << 1, HAL_GetTick());
-    HAL_UART_Transmit_DMA(&conf->uart, conf->tx_buffer, len);
+    HAL_UART_Transmit_DMA(&conf->uart, conf->tx_data.buffer, len);
 }
 
 void mw_uart_dma_data_transmit(uart_index_enum_t uart_index, uint8_t* data,
@@ -170,7 +170,7 @@ void mw_uart_dma_data_transmit(uart_index_enum_t uart_index, uint8_t* data,
     __HAL_LINKDMA(&conf->uart, hdmatx, conf->dma_tx);
     HAL_DMA_Init(&conf->dma_tx);
     lib_busy_buffer_engage(conf->busy_tx, data_time_avg << 1, HAL_GetTick());
-    HAL_UART_Transmit_DMA(&conf->uart, conf->tx_buffer, length);
+    HAL_UART_Transmit_DMA(&conf->uart, conf->tx_data.buffer, length);
 }
 
 /* Local functions */
@@ -178,16 +178,13 @@ void mw_uart_dma_data_transmit(uart_index_enum_t uart_index, uint8_t* data,
 static void _uart_configure(uart_dma_conf_t* conf) {
     if (conf->uart.Instance == USART1) {
         /* @formatter:off */
-		__USART1_CLK_ENABLE();
-		/* @formatter:on */
+		__USART1_CLK_ENABLE();   /* @formatter:on */
     } else if (conf->uart.Instance == USART2) {
         /* @formatter:off */
-		__USART2_CLK_ENABLE();
-		/* @formatter:on */
+		__USART2_CLK_ENABLE();   /* @formatter:on */
     } else if (conf->uart.Instance == USART6) {
         /* @formatter:off */
-		__USART6_CLK_ENABLE();
-		/* @formatter:on */
+		__USART6_CLK_ENABLE();   /* @formatter:on */
     } else {
         error_report(18, UartError);
         return;
@@ -230,7 +227,8 @@ static void _uart_configure_dma(uart_dma_conf_t* conf) {
     }
     __HAL_LINKDMA(&conf->uart, hdmarx, conf->dma_rx);
     HAL_DMA_Init(&conf->dma_rx);
-    HAL_UART_Receive_DMA(&conf->uart, conf->rx_buffer, conf->rx_buffer_size);
+    HAL_UART_Receive_DMA(&conf->uart, conf->rx_data.buffer,
+            conf->rx_data.max_length);
     /* Cortex-M uses the reversed priority numbering.
      So, priority 0 corresponds to the highest priority */
     HAL_NVIC_SetPriority(conf->nvic_dma_rx.irq,
@@ -267,12 +265,12 @@ void USART1_IRQHandler() {
         __HAL_UART_CLEAR_IDLEFLAG(&conf->uart);
         if (conf->rec_data_process) {
             /* Passes last recorded address of DMA buffer */
-            conf->rec_data_process(conf->rx_buffer,
-                    conf->rx_buffer_size - conf->dma_rx.Instance->NDTR,
-                    conf->rx_buffer_size);
+            conf->rec_data_process(conf->rx_data.buffer,
+                    conf->rx_data.max_length - conf->dma_rx.Instance->NDTR,
+                    conf->rx_data.max_length);
             HAL_UART_DMAStop(&conf->uart);
-            HAL_UART_Receive_DMA(&conf->uart, conf->rx_buffer,
-                    conf->rx_buffer_size);
+            HAL_UART_Receive_DMA(&conf->uart, conf->rx_data.buffer,
+                    conf->rx_data.max_length);
         }
     }
     HAL_UART_IRQHandler(&conf->uart);
@@ -284,11 +282,11 @@ void USART2_IRQHandler() {
         __HAL_UART_CLEAR_IDLEFLAG(&conf->uart);
         if (conf->rec_data_process) {
             /* Passes last recorded address of DMA buffer */
-            conf->rec_data_process(conf->rx_buffer,
+            conf->rec_data_process(conf->rx_data.buffer,
             UART2_DMA_RX_BUFFER_SIZE - conf->dma_rx.Instance->NDTR,
             UART2_DMA_RX_BUFFER_SIZE);
             HAL_UART_DMAStop(&conf->uart);
-            HAL_UART_Receive_DMA(&conf->uart, conf->rx_buffer,
+            HAL_UART_Receive_DMA(&conf->uart, conf->rx_data.buffer,
             UART2_DMA_RX_BUFFER_SIZE);
         }
     }
