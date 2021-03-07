@@ -22,10 +22,10 @@ static uint8_t _rx_buff[SIM800_RESP_BUFFER_SIZE];
 static char _rx_expect_buff[SIM800_EXPECT_BUFFER_SIZE];
 static gprs_state_t _gprs_state;
 
-static void _gprs_data_received(uint8_t* databuffer, uint32_t position,
-        uint32_t buf_max_len) {
-    memcpy(_gprs_state.rx_buffer, databuffer, position);
-    _gprs_state.received_bytes_count = position;
+static void _gprs_data_received(uart_data_t* uart_data) {
+    memcpy(_gprs_state.rx_buffer, uart_data->buffer,
+            uart_data->allocated_length);
+    _gprs_state.received_bytes_count = uart_data->allocated_length;
     _gprs_state.rx_status = Sim800StatusReady;
 }
 

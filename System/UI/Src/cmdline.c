@@ -123,7 +123,7 @@ static void _taskmgr(void* args) {
 
 static void _time(void* args) {
     debug_p("PERF: Measuring execution time for: '%s'\n", (char* )args);
-    uint32_t time_us = prf_func_exect_time_get(cmd_process(args));
+    uint32_t time_us = prf_func_exec_time_get(cmd_process(args));
     debug_p("PERF: Execution took %lu us\n", time_us);
 }
 
@@ -472,5 +472,5 @@ void cmd_process(void* input) {
             return;
         }
     }
-    debug_p("Unknown command. Type help\n");
+    debug_p("Unknown command '%s'. Type help\n", input);
 }
