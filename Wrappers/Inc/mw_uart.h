@@ -22,9 +22,6 @@
 #define UART2_DMA_RX_BUFFER_SIZE           MCONF_UART2_DMA_RX_BUFFER_SIZE
 #define UART2_DMA_TX_BUFFER_SIZE           MCONF_UART2_DMA_TX_BUFFER_SIZE
 
-typedef void (*dma_buff_acquire_t)(uint8_t* databuffer, uint32_t position,
-        uint32_t buf_max_len);
-
 /* @formatter:off */
 typedef enum {
 	Uart1ConfigIndex,
@@ -38,6 +35,8 @@ typedef struct {
     uint32_t max_length;
     uint8_t* buffer;
 } uart_data_t;
+
+typedef void (*dma_buff_acquire_t)(uart_data_t* uart_data);
 
 typedef struct {
     DMA_HandleTypeDef dma_rx;

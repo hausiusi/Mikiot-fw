@@ -178,13 +178,13 @@ void mw_uart_dma_data_transmit(uart_index_enum_t uart_index, uint8_t* data,
 static void _uart_configure(uart_dma_conf_t* conf) {
     if (conf->uart.Instance == USART1) {
         /* @formatter:off */
-		__USART1_CLK_ENABLE();   /* @formatter:on */
+		__USART1_CLK_ENABLE();      /* @formatter:on */
     } else if (conf->uart.Instance == USART2) {
         /* @formatter:off */
-		__USART2_CLK_ENABLE();   /* @formatter:on */
+		__USART2_CLK_ENABLE();      /* @formatter:on */
     } else if (conf->uart.Instance == USART6) {
         /* @formatter:off */
-		__USART6_CLK_ENABLE();   /* @formatter:on */
+		__USART6_CLK_ENABLE();      /* @formatter:on */
     } else {
         error_report(18, UartError);
         return;
@@ -264,10 +264,9 @@ void USART1_IRQHandler() {
     if (__HAL_UART_GET_FLAG(&conf->uart, USART_FLAG_IDLE) == SET) {
         __HAL_UART_CLEAR_IDLEFLAG(&conf->uart);
         if (conf->rec_data_process) {
-            /* Passes last recorded address of DMA buffer */
-            conf->rec_data_process(conf->rx_data.buffer,
-                    conf->rx_data.max_length - conf->dma_rx.Instance->NDTR,
-                    conf->rx_data.max_length);
+            conf->rx_data.allocated_length = conf->rx_data.max_length
+                    - conf->dma_rx.Instance->NDTR;
+            conf->rec_data_process(&conf->rx_data);
             HAL_UART_DMAStop(&conf->uart);
             HAL_UART_Receive_DMA(&conf->uart, conf->rx_data.buffer,
                     conf->rx_data.max_length);
@@ -281,13 +280,12 @@ void USART2_IRQHandler() {
     if (__HAL_UART_GET_FLAG(&conf->uart, USART_FLAG_IDLE) == SET) {
         __HAL_UART_CLEAR_IDLEFLAG(&conf->uart);
         if (conf->rec_data_process) {
-            /* Passes last recorded address of DMA buffer */
-            conf->rec_data_process(conf->rx_data.buffer,
-            UART2_DMA_RX_BUFFER_SIZE - conf->dma_rx.Instance->NDTR,
-            UART2_DMA_RX_BUFFER_SIZE);
+            conf->rx_data.allocated_length = conf->rx_data.max_length
+                    - conf->dma_rx.Instance->NDTR;
+            conf->rec_data_process(&conf->rx_data);
             HAL_UART_DMAStop(&conf->uart);
             HAL_UART_Receive_DMA(&conf->uart, conf->rx_data.buffer,
-            UART2_DMA_RX_BUFFER_SIZE);
+                    conf->rx_data.max_length);
         }
     }
     HAL_UART_IRQHandler(&conf->uart);

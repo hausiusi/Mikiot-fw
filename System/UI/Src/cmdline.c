@@ -386,7 +386,7 @@ static void _gprs(void* args) {
         debug_p("    cmd     - raw command. Must be the last argument\n");
         debug_p("    debug   - debugs gprs driver. Can be on or off\n");
         debug_p("    restart - restarts gprs module using the reset pin\n");
-        /* @formatter:on */
+                /* @formatter:on */
     }
     return;
 }
@@ -472,5 +472,5 @@ void cmd_process(void* input) {
             return;
         }
     }
-    debug_p("Unknown command. Type help\n");
+    debug_p("Unknown command '%s'. Type help\n", input);
 }
