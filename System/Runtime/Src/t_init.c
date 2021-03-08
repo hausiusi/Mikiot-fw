@@ -18,29 +18,30 @@
 #include "error.h"
 
 static void _rtc_init() {
-	mw_timebase_init(1000);
-	mgr_rtc_init(RTC_HOURFORMAT_24);
-	/* Time */
-	mgr_rtc_time.Hours = 2;
-	mgr_rtc_time.Minutes = 10;
-	mgr_rtc_time.Seconds = 40;
-	mgr_rtc_time.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-	mgr_rtc_time.StoreOperation = RTC_STOREOPERATION_RESET;
+#if (RTC_ON == 1)
+    mgr_rtc_init(RTC_HOURFORMAT_24);
+    /* Time */
+    mgr_rtc_time.Hours = 2;
+    mgr_rtc_time.Minutes = 10;
+    mgr_rtc_time.Seconds = 40;
+    mgr_rtc_time.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+    mgr_rtc_time.StoreOperation = RTC_STOREOPERATION_RESET;
 
-	/* Set date and time */
-	mgr_rtc_date.WeekDay = RTC_WEEKDAY_WEDNESDAY;
-	mgr_rtc_date.Month = RTC_MONTH_JANUARY;
-	mgr_rtc_date.Date = 22;
-	mgr_rtc_date.Year = 20;
-
-	mgr_rtc_set(&mgr_rtc_time, &mgr_rtc_date);
+    /* Set date and time */
+    mgr_rtc_date.WeekDay = RTC_WEEKDAY_WEDNESDAY;
+    mgr_rtc_date.Month = RTC_MONTH_JANUARY;
+    mgr_rtc_date.Date = 22;
+    mgr_rtc_date.Year = 20;
+    mgr_rtc_set(&mgr_rtc_time, &mgr_rtc_date);
+#endif
 }
 
 extern void thread_init() {
-	_rtc_init();
-	for (;;) {
-		vTaskDelay(10);
-	}
+    mw_timebase_init(1000);
+    _rtc_init();
+    for (;;) {
+        vTaskDelay(10);
+    }
 }
 
 #if (COMPILE_WITH_UNIT_TESTS == 1)
@@ -50,13 +51,13 @@ void test_incorrect_blob();
 
 /* Thread is created to test new features */
 extern void thread_test() {
-	for (int a = 0; a < 1000000; a++) {
-		vTaskDelay(0);
-	}
+    for (int a = 0; a < 1000000; a++) {
+        vTaskDelay(0);
+    }
 #if (COMPILE_WITH_UNIT_TESTS == 1)
 	tf_run(test_incorrect_blob());
 #endif
-	for (;;) {
-		vTaskDelay(1000);
-	}
+    for (;;) {
+        vTaskDelay(1000);
+    }
 }
