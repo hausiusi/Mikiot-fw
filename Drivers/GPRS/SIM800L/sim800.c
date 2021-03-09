@@ -281,8 +281,7 @@ const char* sim800_status_tostr(sim800_status_t status) {
 		"Success",
 		"Fail",
 		"Timeout",
-	};
-	/* @formatter:on */
+	};/* @formatter:on */
     return statuses[status];
 }
 

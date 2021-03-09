@@ -28,12 +28,12 @@ typedef enum {
 } error_enum_t;
 // @formatter:on
 typedef struct {
-	uint32_t id;
-	error_enum_t error_type;
-	char* error_buffer_p;
+    uint32_t id;
+    error_enum_t error_type;
+    char* error_buffer_p;
 } error_t;
 
 void error_report_(const char* file_name, size_t line, const char* func_name,
-		uint32_t id, const char* type);
+        uint32_t id, const char* type);
 
 #endif /* ERROR_H_ */

@@ -40,22 +40,22 @@ const uint8_t incorrect_blobs[][INCORRECT_BLOB_MAXLEN] = {
 	/* @formatter:on */
 
 void _load_and_check_incorrect_blob(int blob_index, int error_index,
-		uint32_t expected_error_id, error_enum_t expected_error_type) {
-	uint8_t blob[INCORRECT_BLOB_MAXLEN];
-	memcpy(blob, incorrect_blobs[blob_index], sizeof(blob));
-	mock_error_report_reset();
-	bp_player_play(blob);
-	tf_equals(mock_ereports[error_index][0], expected_error_id);
-	tf_equals(mock_ereports[error_index][1], expected_error_type);
+        uint32_t expected_error_id, error_enum_t expected_error_type) {
+    uint8_t blob[INCORRECT_BLOB_MAXLEN];
+    memcpy(blob, incorrect_blobs[blob_index], sizeof(blob));
+    mock_error_report_reset();
+    bp_player_play(blob);
+    tf_equals(mock_ereports[error_index][0], expected_error_id);
+    tf_equals(mock_ereports[error_index][1], expected_error_type);
 }
 
 extern void test_incorrect_blob() {
-	_load_and_check_incorrect_blob(0, 0, 7, BlobProcessorError);
-	_load_and_check_incorrect_blob(1, 0, 11, BlobProcessorError);
-	_load_and_check_incorrect_blob(2, 0, 12, BlobProcessorError);
-	_load_and_check_incorrect_blob(3, 0, 13, BlobProcessorError);
-	_load_and_check_incorrect_blob(4, 0, 9, BlobProcessorError);
-	_load_and_check_incorrect_blob(5, 0, 8, BlobProcessorError);
+    _load_and_check_incorrect_blob(0, 0, 7, BlobProcessorError);
+    _load_and_check_incorrect_blob(1, 0, 11, BlobProcessorError);
+    _load_and_check_incorrect_blob(2, 0, 12, BlobProcessorError);
+    _load_and_check_incorrect_blob(3, 0, 13, BlobProcessorError);
+    _load_and_check_incorrect_blob(4, 0, 9, BlobProcessorError);
+    _load_and_check_incorrect_blob(5, 0, 8, BlobProcessorError);
 }
 
 #endif

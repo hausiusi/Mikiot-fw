@@ -9,14 +9,14 @@
  */
 
 int main(void) {
-	debug_level = DBG_INFO;
-	mw_init();
-	mw_internal_clock_init();
-	mw_external_clock_init(100);
-	os_start();
+    debug_level = DBG_INFO;
+    mw_init();
+    mw_internal_clock_init();
+    mw_external_clock_init(100);
+    os_start();
 
-	while (1) {
-	}
+    while (1) {
+    }
 }
 
 #ifdef  USE_FULL_ASSERT

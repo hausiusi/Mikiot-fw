@@ -5,12 +5,10 @@
  *      Author: Zviad
  */
 
-void report_exception()
-{
+void report_exception() {
 
 }
 
-void throw_exception()
-{
+void throw_exception() {
 
 }

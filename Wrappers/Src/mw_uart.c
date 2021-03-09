@@ -178,13 +178,13 @@ void mw_uart_dma_data_transmit(uart_index_enum_t uart_index, uint8_t* data,
 static void _uart_configure(uart_dma_conf_t* conf) {
     if (conf->uart.Instance == USART1) {
         /* @formatter:off */
-		__USART1_CLK_ENABLE();      /* @formatter:on */
+		__USART1_CLK_ENABLE();/* @formatter:on */
     } else if (conf->uart.Instance == USART2) {
         /* @formatter:off */
-		__USART2_CLK_ENABLE();      /* @formatter:on */
+		__USART2_CLK_ENABLE();/* @formatter:on */
     } else if (conf->uart.Instance == USART6) {
         /* @formatter:off */
-		__USART6_CLK_ENABLE();      /* @formatter:on */
+		__USART6_CLK_ENABLE();/* @formatter:on */
     } else {
         error_report(18, UartError);
         return;

@@ -53,8 +53,7 @@ static cmd_struct_t commands[] = {
 	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
 	{ "debuglevel", _dbglevel, "Gets or sets debug level" },
 	{ "version", _version, "Prints current version" },
-};
-/* @formatter:on */
+};/* @formatter:on */
 
 static void _echo(void* args) {
     debug_p("%s\n", (char* )args);
@@ -385,8 +384,7 @@ static void _gprs(void* args) {
         debug_p("    expect  - used for cmd argument when sending a raw command what answer do we expect\n");
         debug_p("    cmd     - raw command. Must be the last argument\n");
         debug_p("    debug   - debugs gprs driver. Can be on or off\n");
-        debug_p("    restart - restarts gprs module using the reset pin\n");
-        /* @formatter:on */
+        debug_p("    restart - restarts gprs module using the reset pin\n");/* @formatter:on */
     }
     return;
 }

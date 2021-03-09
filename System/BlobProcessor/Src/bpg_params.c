@@ -15,6 +15,6 @@ static const blob_fp_t _params[] = {
 };
 
 void bpt_params_init() {
-	bp_params.functions = (blob_fp_t*) _params;
-	bp_params.len = array_count(_params);
+    bp_params.functions = (blob_fp_t*) _params;
+    bp_params.len = array_count(_params);
 }

@@ -16,11 +16,11 @@
 #include "task.h"
 
 typedef struct _overall {
-	uint32_t rtc_ok :1;
-	uint32_t base_time_ok :1;
-	uint32_t base_ticks;
-	uint32_t os_ticks;
-	tasks_statuses_t* task_statuses;
+    uint32_t rtc_ok :1;
+    uint32_t base_time_ok :1;
+    uint32_t base_ticks;
+    uint32_t os_ticks;
+    tasks_statuses_t* task_statuses;
 } overall_t;
 
 void overal_state_analyze(overall_t* overall_state);
