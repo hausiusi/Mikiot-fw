@@ -47,6 +47,7 @@ extern void thread_init() {
 #if (COMPILE_WITH_UNIT_TESTS == 1)
 #include "test_framework.h"
 void test_incorrect_blob();
+void test_ringbuffer();
 #endif
 
 /* Thread is created to test new features */
@@ -55,7 +56,8 @@ extern void thread_test() {
         vTaskDelay(0);
     }
 #if (COMPILE_WITH_UNIT_TESTS == 1)
-	tf_run(test_incorrect_blob());
+    tf_run(test_ringbuffer());
+    tf_run(test_incorrect_blob());
 #endif
     for (;;) {
         vTaskDelay(1000);
