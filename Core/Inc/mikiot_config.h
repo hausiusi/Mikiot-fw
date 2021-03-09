@@ -15,6 +15,8 @@
 /* When set to 1 project will be compiled with unit tests. */
 #define COMPILE_WITH_UNIT_TESTS           0
 
+#define RTC_ON                            1
+
 /* UART buffer sizes */
 #define MCONF_UART1_DMA_RX_BUFFER_SIZE    512
 #define MCONF_UART1_DMA_TX_BUFFER_SIZE    512
