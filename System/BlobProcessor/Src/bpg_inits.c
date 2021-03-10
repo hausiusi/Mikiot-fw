@@ -15,6 +15,6 @@ static const blob_fp_t _inits[] = {
 };
 
 extern void bpt_inits_init() {
-	bp_inits.functions = (blob_fp_t*) _inits;
-	bp_inits.len = array_count(_inits);
+    bp_inits.functions = (blob_fp_t*) _inits;
+    bp_inits.len = array_count(_inits);
 }

@@ -16,13 +16,13 @@
 // we will call only wrappers or our OS functions not directly cmsis just to avoid later porting problems
 
 typedef struct startup_task {
-	BaseType_t result;
-	TaskFunction_t thread;
-	char* name;
-	configSTACK_DEPTH_TYPE stack_depth;
-	void* const parameters;
-	UBaseType_t priority;
-	TaskHandle_t created_task;
+    BaseType_t result;
+    TaskFunction_t thread;
+    char* name;
+    configSTACK_DEPTH_TYPE stack_depth;
+    void* const parameters;
+    UBaseType_t priority;
+    TaskHandle_t created_task;
 } startup_task_t;
 
 void thread_init();
@@ -65,11 +65,11 @@ static void _startup_tasks_create() {
 /* @formatter:on */
 
 void os_start() {
-	_startup_tasks_create();
-	vTaskStartScheduler();
+    _startup_tasks_create();
+    vTaskStartScheduler();
 }
 
 TaskHandle_t os_get_task_handler(task_index_enum_t task_index) {
-	return startup_tasks[task_index].created_task;
+    return startup_tasks[task_index].created_task;
 }
 

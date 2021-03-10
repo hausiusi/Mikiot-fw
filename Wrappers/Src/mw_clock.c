@@ -62,7 +62,7 @@ void mw_external_clock_init(uint32_t clock_mhz) {
     RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
     RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
 #if (RTC_ON == 1)
-	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
+    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
 #endif
 
     /** Configure the main internal regulator output voltage
@@ -78,7 +78,7 @@ void mw_external_clock_init(uint32_t clock_mhz) {
             ;
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;
 #if (RTC_ON == 1)
-	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+    RCC_OscInitStruct.LSEState = RCC_LSE_ON;
 #endif
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -106,16 +106,16 @@ void mw_external_clock_init(uint32_t clock_mhz) {
         }
     }
 #if (RTC_ON == 1)
-	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_I2S
-			| RCC_PERIPHCLK_RTC;
-	PeriphClkInitStruct.PLLI2S.PLLI2SN = 200;
-	PeriphClkInitStruct.PLLI2S.PLLI2SM = 5;
-	PeriphClkInitStruct.PLLI2S.PLLI2SR = 2;
-	PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
-		for (;;) {
-			asm ("NOP");
-		}
-	}
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_I2S
+            | RCC_PERIPHCLK_RTC;
+    PeriphClkInitStruct.PLLI2S.PLLI2SN = 200;
+    PeriphClkInitStruct.PLLI2S.PLLI2SM = 5;
+    PeriphClkInitStruct.PLLI2S.PLLI2SR = 2;
+    PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
+        for (;;) {
+            asm ("NOP");
+        }
+    }
 #endif
 }

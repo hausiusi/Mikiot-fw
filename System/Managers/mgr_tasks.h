@@ -14,10 +14,10 @@
 #include "task.h"
 
 typedef struct _tasks_statuses {
-	bool_t is_available;
-	TaskStatus_t* current;
-	TaskStatus_t* previous;
-	uint32_t current_count;
+    bool_t is_available;
+    TaskStatus_t* current;
+    TaskStatus_t* previous;
+    uint32_t current_count;
 } tasks_statuses_t;
 
 tasks_statuses_t* mgr_tasks_get_system_state();

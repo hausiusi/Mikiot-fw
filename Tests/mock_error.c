@@ -8,11 +8,11 @@
 #include "test_framework.h"
 
 void mock_error_limits_check() {
-	if (mock_ereport_index > MOCK_EREPORTS_COUNT) {
-		tf_write(
-				"mock error report limit reached. Please, reset or increase. Limit is: %i\n",
-				MOCK_EREPORTS_COUNT);
-		while (1) {
-		};
-	}
+    if (mock_ereport_index > MOCK_EREPORTS_COUNT) {
+        tf_write(
+                "mock error report limit reached. Please, reset or increase. Limit is: %i\n",
+                MOCK_EREPORTS_COUNT);
+        while (1) {
+        };
+    }
 }

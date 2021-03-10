@@ -27,19 +27,19 @@ enum {
 /* @formatter:on */
 
 typedef struct _ringbuffer_t {
-	uint8_t* data_aloc_start; // Where the data array starts
-	uint8_t* read_pos; // Pointer to actual reading position. The last read was previous position
-	uint8_t* write_pos; // Pointer to actual writing position
-	uint8_t element_len; // Length of each element
-	size_t capacity; // Capacity how many elements can the buffer hold
-	size_t available_space; // Available free space (Difference between capacity and count).
-	uint8_t status; // Shows ringbuffer status using the bits set according to @ringbuffer_status_t
-	void (*ringbuffer_overlapped)(); // Function which will be called in case of overlap
+    uint8_t* data_aloc_start; // Where the data array starts
+    uint8_t* read_pos; // Pointer to actual reading position. The last read was previous position
+    uint8_t* write_pos; // Pointer to actual writing position
+    uint8_t element_len; // Length of each element
+    size_t capacity; // Capacity how many elements can the buffer hold
+    size_t available_space; // Available free space (Difference between capacity and count).
+    uint8_t status; // Shows ringbuffer status using the bits set according to @ringbuffer_status_t
+    void (*ringbuffer_overlapped)(); // Function which will be called in case of overlap
 } ringbuffer_t;
 
 void lib_ringbuffer_init(ringbuffer_t* ringbuffer, uint8_t* data,
-		uint8_t element_len, size_t len, bool_t allows_overlap,
-		void* overlap_detected);
+        uint8_t element_len, size_t len, bool_t allows_overlap,
+        void* overlap_detected);
 
 bool_t lib_ringbuffer_enq(ringbuffer_t* ringbuffer, uint8_t* data, size_t len);
 

@@ -13,9 +13,9 @@
 typedef void (*cmd_func_t)(void*);
 
 typedef struct _cmdstruct {
-	char* cmd;
-	cmd_func_t fp;
-	char* help;
+    char* cmd;
+    cmd_func_t fp;
+    char* help;
 } cmd_struct_t;
 
 void cmd_process(void* input);

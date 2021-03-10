@@ -8,6 +8,4 @@
 #ifndef EXCEPTIONS_H_
 #define EXCEPTIONS_H_
 
-
-
 #endif /* EXCEPTIONS_H_ */
