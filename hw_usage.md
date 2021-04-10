@@ -21,7 +21,7 @@ Describes the hardware which is used what for
      - **Speed:** 1000 interrupts per second
 
 ## UARTS<div id="uarts"/>
-- [UART1](./Wrappers/Src/mw_uart1.c)
+- [UART1,2,6](./Wrappers/Src/mw_uart.c)
     - **IO:** Tx - GPIOB6, Rx - GPIOB7
     - **Purpose:** commandline input and output interface
     - **Speed:** variable (default: 115200)
