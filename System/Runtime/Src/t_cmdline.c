@@ -16,7 +16,7 @@
 
 static uint8_t uart1_rx_buffer[UART1_DMA_RX_BUFFER_SIZE];
 
-void uart1_data_received(uart_data_t* uart_data) {
+static void _cli_data_received(uart_data_t* uart_data) {
     memcpy(uart1_rx_buffer, uart_data->buffer, uart_data->allocated_length);
     xTaskNotifyFromISR(os_get_task_handler(CmdlineHandler), 0,
             eSetValueWithoutOverwrite, NULL);
@@ -24,7 +24,7 @@ void uart1_data_received(uart_data_t* uart_data) {
 
 extern void thread_cmdline() {
     uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart1ConfigIndex);
-    conf->rec_data_process = uart1_data_received;
+    conf->rec_data_process = _cli_data_received;
     mw_uart_dma_init(conf);
     debug_info("UART1 initialized BR: %i\n", conf->uart.Init.BaudRate);
     uint32_t notify_value = 0;
