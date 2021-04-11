@@ -22,9 +22,14 @@ Describes the hardware which is used what for
 
 ## UARTS<div id="uarts"/>
 - [UART1,2,6](./Wrappers/Src/mw_uart.c)
-    - **IO:** Tx - GPIOB6, Rx - GPIOB7
-    - **Purpose:** commandline input and output interface
-    - **Speed:** variable (default: 115200)
+    - **UART1**			
+        - **IO:** Tx - GPIOB6, Rx - GPIOB7 
+        - **Purpose:** commandline input and output interface
+        - **Speed:** variable (default: 115200)
+    - **UART2**
+        - **IO:** Tx - GPIOD5, Rx - GPIOD6 
+        - **Purpose:** GPRS serial communication interface
+        - **Speed:** variable (default: 57600)
 
 ## RTC<div id="rtc"/>
 - [Integrated RTC](./Wrappers/Src/mw_rtc.c)
