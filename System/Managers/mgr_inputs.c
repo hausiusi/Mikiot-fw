@@ -1,5 +1,5 @@
 /*
- * mgr_button.c
+ * mgr_inputs.c
  *
  *  Created on: Jun 4, 2020
  *      Author: saturn
@@ -9,23 +9,23 @@
 #include "defines.h"
 #include "error.h"
 #include "ioconfig.h"
-#include "mgr_button.h"
+#include "mgr_inputs.h"
 #include "mw_io.h"
 
 static void _timebase_init();
 static void _tim_init(uint32_t period);
-static btn_t* _find_button(uint16_t gpio_pin);
+static input_t* _find_input(uint16_t gpio_pin);
 
 /* @formatter:off */
 
 // Please don't collide same pins on different ports, or upgrade the function find_button
-btn_t _buttons[] = {
+input_t _inputs[] = {
 	{
 		.gpio.gpiox = BTN1_GPIO,
 		.gpio.pin = BTN1_GPIO_PIN,
 		.gpio.mode = GPIO_MODE_IT_RISING_FALLING,
 		.gpio.pull = GPIO_NOPULL,
-		.type = ButtonNormalOpen,
+		.type = InputIdleStateLow,
 		.on_count = 0,
 		.off_count = 0,
 		.top_lvl = 25,
@@ -38,7 +38,7 @@ btn_t _buttons[] = {
 		.gpio.pin = BTN2_GPIO_PIN,
 		.gpio.mode = GPIO_MODE_IT_RISING_FALLING,
 		.gpio.pull = GPIO_PULLUP,
-		.type = ButtonNormalClose,
+		.type = InputIdleStateHigh,
 		.on_count = 0,
 		.off_count = 0,
 		.top_lvl = 25,
@@ -51,7 +51,7 @@ btn_t _buttons[] = {
 		.gpio.pin = BTN3_GPIO_PIN,
 		.gpio.mode = GPIO_MODE_IT_RISING_FALLING,
 		.gpio.pull = GPIO_PULLUP,
-		.type = ButtonNormalClose,
+		.type = InputIdleStateHigh,
 		.on_count = 0,
 		.off_count = 0,
 		.top_lvl = 25,
@@ -63,25 +63,25 @@ btn_t _buttons[] = {
 
 /* @formatter:on */
 
-void mgr_button_init(uint32_t tim_period_us) {
-    for (int i = 0; i < COUNT(_buttons); i++) {
+void mgr_inputs_init(uint32_t tim_period_us) {
+    for (int i = 0; i < COUNT(_inputs); i++) {
         gpio_init_t gpio = { 0 };
 
         /*Configure GPIO for pin */
-        gpio.gpiox = _buttons[i].gpio.gpiox;
-        gpio.init.Pin = _buttons[i].gpio.pin;
-        gpio.init.Mode = _buttons[i].gpio.mode;
-        gpio.init.Pull = _buttons[i].gpio.pull;
+        gpio.gpiox = _inputs[i].gpio.gpiox;
+        gpio.init.Pin = _inputs[i].gpio.pin;
+        gpio.init.Mode = _inputs[i].gpio.mode;
+        gpio.init.Pull = _inputs[i].gpio.pull;
         mw_gpio_init(&gpio);
-        mw_gpio_nvic_init(_buttons[i].nvic.irq,
-                _buttons[i].nvic.preempt_priority,
-                _buttons[i].nvic.sub_priority);
+        mw_gpio_nvic_init(_inputs[i].nvic.irq,
+                _inputs[i].nvic.preempt_priority,
+                _inputs[i].nvic.sub_priority);
     }
     _tim_init(tim_period_us);
 }
 
-static void _button_pressed(GPIO_TypeDef* gpio, uint16_t pin) {
-    debug_p("Button %i click\n", pin);
+static void _input_triggered(GPIO_TypeDef* gpio, uint16_t pin) {
+    debug_p("Input %i trigger\n", pin);
     if (gpio == GPIOB && pin == GPIO_PIN_2) {
         mw_gpio_togglepin(GPIOD, GPIO_PIN_13);
     } else if (gpio == GPIOA && pin == GPIO_PIN_1) {
@@ -91,45 +91,45 @@ static void _button_pressed(GPIO_TypeDef* gpio, uint16_t pin) {
     }
 }
 
-void key_press_handle() {
+void mgr_input_trigger_handle() {
 // Read button state
-    for (int i = 0; i < COUNT(_buttons); i++) {
-        if (_buttons[i].confirmed_state == _buttons[i].state) {
+    for (int i = 0; i < COUNT(_inputs); i++) {
+        if (_inputs[i].confirmed_state == _inputs[i].state) {
             continue;
         }
-        if (_buttons[i].state == ButtonOn) {
-            _buttons[i].off_count = 0;
-            if (_buttons[i].on_count >= _buttons[i].top_lvl) {
-                _buttons[i].confirmed_state = ButtonOn;
+        if (_inputs[i].state == InputStateHigh) {
+            _inputs[i].off_count = 0;
+            if (_inputs[i].on_count >= _inputs[i].top_lvl) {
+                _inputs[i].confirmed_state = InputStateHigh;
             } else {
-                _buttons[i].on_count++;
+                _inputs[i].on_count++;
             }
-        } else if (_buttons[i].state == ButtonOff) {
-            _buttons[i].on_count = 0;
-            if (_buttons[i].off_count >= _buttons[i].top_lvl) {
-                _buttons[i].confirmed_state = ButtonOff;
-                _button_pressed(_buttons[i].gpio.gpiox, _buttons[i].gpio.pin);
+        } else if (_inputs[i].state == InputStateLow) {
+            _inputs[i].on_count = 0;
+            if (_inputs[i].off_count >= _inputs[i].top_lvl) {
+                _inputs[i].confirmed_state = InputStateLow;
+                _input_triggered(_inputs[i].gpio.gpiox, _inputs[i].gpio.pin);
             } else {
-                _buttons[i].off_count++;
+                _inputs[i].off_count++;
             }
         }
 
     }
 }
 
-static btn_t* _find_button(uint16_t gpio_pin) {
-    for (int i = 0; i < COUNT(_buttons); i++) {
-        btn_t* btn = &_buttons[i];
-        if (gpio_pin == btn->gpio.pin) {
-            GPIO_PinState state = mw_gpio_readpin(btn->gpio.gpiox,
-                    btn->gpio.pin);
-            if (btn->type == ButtonNormalOpen) {
-                if (btn->state != (_btn_state) state) {
-                    return btn;
+static input_t* _find_input(uint16_t gpio_pin) {
+    for (int i = 0; i < COUNT(_inputs); i++) {
+        input_t* input = &_inputs[i];
+        if (gpio_pin == input->gpio.pin) {
+            GPIO_PinState state = mw_gpio_readpin(input->gpio.gpiox,
+                    input->gpio.pin);
+            if (input->type == InputIdleStateLow) {
+                if (input->state != (input_state_enum_t) state) {
+                    return input;
                 }
-            } else if (btn->type == ButtonNormalClose) {
-                if (btn->state == (_btn_state) state) {
-                    return btn;
+            } else if (input->type == InputIdleStateHigh) {
+                if (input->state == (input_state_enum_t) state) {
+                    return input;
                 }
             }
         }
@@ -137,21 +137,21 @@ static btn_t* _find_button(uint16_t gpio_pin) {
     return NULL;
 }
 
-void mgr_button_detect_state(uint16_t gpio_pin) {
-    btn_t* btn = _find_button(gpio_pin);
-    if (gpio_pin == btn->gpio.pin) {
-        GPIO_PinState state = mw_gpio_readpin(btn->gpio.gpiox, btn->gpio.pin);
-        if (btn->type == ButtonNormalOpen) {
+void mgr_input_detect_state(uint16_t gpio_pin) {
+    input_t* input = _find_input(gpio_pin);
+    if (gpio_pin == input->gpio.pin) {
+        GPIO_PinState state = mw_gpio_readpin(input->gpio.gpiox, input->gpio.pin);
+        if (input->type == InputIdleStateLow) {
             if (state == GPIO_PIN_SET) {
-                btn->state = ButtonOn;
+                input->state = InputStateHigh;
             } else {
-                btn->state = ButtonOff;
+                input->state = InputStateLow;
             }
         } else {
             if (state == GPIO_PIN_RESET) {
-                btn->state = ButtonOn;
+                input->state = InputStateHigh;
             } else {
-                btn->state = ButtonOff;
+                input->state = InputStateLow;
             }
         }
     }

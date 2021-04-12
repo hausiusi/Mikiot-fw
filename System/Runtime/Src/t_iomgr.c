@@ -5,12 +5,12 @@
  *      Author: saturn
  */
 
+#include <stddef.h>
+#include <string.h>
 #include "debug.h"
-#include "mgr_button.h"
+#include "mgr_inputs.h"
 #include "mw_io.h"
-#include "string.h"
 #include "utils.h"
-#include "stddef.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "mw_redefines.h"
@@ -29,17 +29,17 @@ static void _gpio_init() {
 
 extern void thread_iomgr() {
     _gpio_init();
-    mgr_button_init(1000);
+    mgr_inputs_init(1000);
     for (;;) {
         vTaskDelay(5);
     }
 }
 
 void mw_tim_period_elapsed_callback(TIM_HandleTypeDef* htim) {
-    key_press_handle();
+    mgr_input_trigger_handle();
 }
 
 void mw_gpio_exti_callback(uint16_t GPIO_Pin) {
-    mgr_button_detect_state(GPIO_Pin);
+    mgr_input_detect_state(GPIO_Pin);
 }
 
