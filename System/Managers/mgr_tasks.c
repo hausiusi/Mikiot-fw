@@ -66,6 +66,32 @@ tasks_statuses_t* mgr_tasks_get_system_state() {
     return &system_tasks_state;
 }
 
+bool_t mgr_tasks_kill_by_name(const char* task_name) {
+    task_handle_t task_handle = mgr_tasks_get_task_handle_from_name(task_name);
+    if (task_handle == NULL) {
+        debug_error("Couldn't terminate a null handle\n");
+        return false;
+    }
+    vTaskDelete(task_handle);
+    return true;
+}
+
+task_handle_t mgr_tasks_get_task_handle_from_name(const char* task_name) {
+    uint32_t task_name_len = strlen(task_name);
+    if (task_name_len == 0) {
+        debug_error("Task name must not be empty\n");
+        return NULL;
+    }
+    for (int i = 0; i < system_tasks_state.current_count; i++) {
+        if (!strncmp(task_name, system_tasks_state.current[i].pcTaskName,
+                task_name_len)) {
+            return system_tasks_state.current[i].xHandle;
+        }
+    }
+    debug_error("Couldn't find task by name '%s'\n", task_name);
+    return NULL;
+}
+
 tasks_statuses_t* mgr_tasks_get_last_measured() {
     return &system_tasks_state;
 }

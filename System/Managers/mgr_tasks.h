@@ -20,8 +20,14 @@ typedef struct _tasks_statuses {
     uint32_t current_count;
 } tasks_statuses_t;
 
+typedef TaskHandle_t task_handle_t;
+
 tasks_statuses_t* mgr_tasks_get_system_state();
 
 tasks_statuses_t* mgr_tasks_get_last_measured();
+
+bool_t mgr_tasks_kill_by_name(const char* task_name);
+
+task_handle_t mgr_tasks_get_task_handle_from_name(const char* task_name);
 
 #endif /* MANAGERS_MGR_TASKS_H_ */

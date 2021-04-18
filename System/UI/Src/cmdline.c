@@ -17,6 +17,7 @@
 #include "mgr_adc.h"
 #include "mgr_gprs.h"
 #include "mgr_rtc.h"
+#include "mgr_tasks.h"
 #include "os_loader.h"
 #include "performance.h"
 #include "utils.h"
@@ -32,6 +33,7 @@ static void _taskmgr(void* args);
 static void _time(void* args);
 static void _adc(void* args);
 static void _gprs(void* args);
+static void _kill(void* args);
 static void _perfinfo(void* args);
 static void _dbglevel(void* args);
 static void _version(void* args);
@@ -50,6 +52,7 @@ static cmd_struct_t commands[] = {
 	{ "time", _time, "Measures command execution time" },
 	{ "adc", _adc, "Measures voltage on PB0" },
 	{ "gprs", _gprs, "Controls GPRS modem" },
+	{ "kill", _kill, "Kills the provided task by its name" },
 	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
 	{ "debuglevel", _dbglevel, "Gets or sets debug level" },
 	{ "version", _version, "Prints current version" },
@@ -387,6 +390,14 @@ static void _gprs(void* args) {
         debug_p("    restart - restarts gprs module using the reset pin\n");/* @formatter:on */
     }
     return;
+}
+
+static void _kill(void* args) {
+    if (mgr_tasks_kill_by_name(args)) {
+        debug_info("Task '%s' successfully terminated\n", args);
+    } else {
+        debug_error("Task '%s' couldn't be terminated\n", args);
+    }
 }
 
 static void _dbglevel(void* args) {
