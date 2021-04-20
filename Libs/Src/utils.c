@@ -96,3 +96,7 @@ void strtrim(const char* restrict src, char* dest, uint32_t dest_max) {
         *(dest - 1) = '.';
     }
 }
+
+bool_t strnullempty(const char* restrict str) {
+    return (str == NULL) || (str[0] == 0);
+}

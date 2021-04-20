@@ -27,4 +27,6 @@ bool_t is_integer(char* str);
 
 void strtrim(const char* src, char* dest, uint32_t dest_max);
 
+bool_t strnullempty(const char* restrict str);
+
 #endif /* INC_UTILS_H_ */

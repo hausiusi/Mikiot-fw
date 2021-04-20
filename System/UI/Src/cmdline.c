@@ -13,6 +13,7 @@
 #include "debug.h"
 #include "bp_player.h"
 #include "error.h"
+#include "FreeRTOSConfig.h"
 #include "mw_rtc.h"
 #include "mgr_adc.h"
 #include "mgr_gprs.h"
@@ -34,6 +35,7 @@ static void _time(void* args);
 static void _adc(void* args);
 static void _gprs(void* args);
 static void _kill(void* args);
+static void _create(void* args);
 static void _perfinfo(void* args);
 static void _dbglevel(void* args);
 static void _version(void* args);
@@ -53,6 +55,7 @@ static cmd_struct_t commands[] = {
 	{ "adc", _adc, "Measures voltage on PB0" },
 	{ "gprs", _gprs, "Controls GPRS modem" },
 	{ "kill", _kill, "Kills the provided task by its name" },
+	{ "create", _create, "Creates the task by provided name and parameters" },
 	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
 	{ "debuglevel", _dbglevel, "Gets or sets debug level" },
 	{ "version", _version, "Prints current version" },
@@ -394,10 +397,50 @@ static void _gprs(void* args) {
 
 static void _kill(void* args) {
     if (mgr_tasks_kill_by_name(args)) {
-        debug_info("Task '%s' successfully terminated\n", args);
+        debug_p("Task '%s' successfully terminated\n", args);
     } else {
         debug_error("Task '%s' couldn't be terminated\n", args);
     }
+}
+
+static void _create(void* args) {
+    char* token = NULL;
+    char* rest = args;
+    int arg_counter = 0;
+    char* task_name = NULL;
+    char* reg_name = NULL;
+    uint16_t stack_depth = 128;
+    uint32_t priority = 1;
+    while (token = strtok_r(rest, " ", &rest), token != NULL) {
+        if (!strncmp(token, "task", 4)) {
+            token = strtok_r(rest, " ", &rest);
+            task_name = token;
+            arg_counter++;
+        } else if (!strncmp(token, "name", 4)) {
+            token = strtok_r(rest, " ", &rest);
+            reg_name = token;
+            arg_counter++;
+        } else if (!strncmp(token, "stack", 5)) {
+            token = strtok_r(rest, " ", &rest);
+            stack_depth = atoi(token);
+            arg_counter++;
+        } else if (!strncmp(token, "priority", 8)) {
+            token = strtok_r(rest, " ", &rest);
+            priority = atol(token);
+            arg_counter++;
+        }
+    }
+    if (!arg_counter) {
+        debug_p("The create command requires arguments. They can be:\n");
+        debug_p("    task     - name of the task from tasks list\n");
+        debug_p("    name     - name of the task after creation\n");
+        debug_p("    stack    - depth of the task's stack in bytes\n");
+        debug_p("    priority - task priority from 0 to %i\n",
+                configMAX_PRIORITIES);
+        mgr_tasks_list_available_runnables();
+        return;
+    }
+    mgr_tasks_create_by_name(task_name, reg_name, stack_depth, priority, NULL);
 }
 
 static void _dbglevel(void* args) {

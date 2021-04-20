@@ -7,10 +7,38 @@
 
 #include <string.h>
 #include "mgr_tasks.h"
+#include "utils.h"
 
 static tasks_statuses_t system_tasks_state;
-static TaskStatus_t* tasks_statuses_current = NULL, * tasks_statuses_prev =
-NULL;
+static TaskStatus_t* tasks_statuses_current = NULL,
+        * tasks_statuses_prev = NULL;
+
+typedef struct {
+    const TaskFunction_t task_function;
+    char* const name;
+} runnable_t;
+
+void thread_init();
+void thread_test();
+void thread_cmdline();
+void thread_taskmgr();
+void thread_overal_state_monitor();
+void thread_iomgr();
+void thread_adc();
+void thread_gprs();
+
+/* @formatter:off */
+static const runnable_t runnables[] = {
+        { .task_function = thread_init, .name = "init" },
+        { .task_function = thread_test, .name = "test" },
+        { .task_function = thread_cmdline, .name = "cmdline" },
+        { .task_function = thread_taskmgr, .name = "taskmgr" },
+        { .task_function = thread_overal_state_monitor, .name = "overal" },
+        { .task_function = thread_iomgr, .name = "iomgr" },
+        { .task_function = thread_adc, .name = "adc" },
+        { .task_function = thread_gprs, .name = "gprs" }
+};
+/* @formatter:on */
 
 tasks_statuses_t* mgr_tasks_get_system_state() {
     uint32_t total_runtime;
@@ -90,6 +118,50 @@ task_handle_t mgr_tasks_get_task_handle_from_name(const char* task_name) {
     }
     debug_error("Couldn't find task by name '%s'\n", task_name);
     return NULL;
+}
+
+bool_t mgr_tasks_create_by_name(char* task_name, char* name_to_assign,
+        uint16_t stack_depth, uint32_t priority, void* const parameters) {
+    task_function_t thread = mgr_tasks_get_thread_by_name(task_name);
+    if (strnullempty(task_name) | strnullempty(name_to_assign)) {
+        debug_error(
+                "Task initialization or registration name shouldn't be empty\n");
+        return false;
+    }
+    if (stack_depth < configMINIMAL_STACK_SIZE) {
+        debug_error("Task stack depth shouldn't  be less than %i bytes\n",
+                configMINIMAL_STACK_SIZE);
+        return false;
+    }
+    if (priority > configMAX_PRIORITIES) {
+        debug_error("Task priority shouldn't be more than %i\n",
+                configMAX_PRIORITIES);
+    }
+    return xTaskCreate(thread, name_to_assign, stack_depth, parameters,
+            priority,
+            NULL) == pdPASS;
+}
+
+task_function_t mgr_tasks_get_thread_by_name(char* task_name) {
+    uint32_t task_name_len = strlen(task_name);
+    if (task_name_len == 0) {
+        debug_error("Task name must not be empty\n");
+        return NULL;
+    }
+    for (int i = 0; i < COUNT(runnables); i++) {
+        if (!strncmp(task_name, runnables[i].name, task_name_len)) {
+            return runnables[i].task_function;
+        }
+    }
+    debug_error("Couldn't find task by name '%s'\n", task_name);
+    return NULL;
+}
+
+void mgr_tasks_list_available_runnables() {
+    debug_p("Available tasks to create:\n");
+    for (int i = 0; i < COUNT(runnables); i++) {
+        debug_p("  %s\n", runnables[i].name);
+    }
 }
 
 tasks_statuses_t* mgr_tasks_get_last_measured() {
