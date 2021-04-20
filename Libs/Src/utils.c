@@ -65,7 +65,7 @@ bool_t is_integer(char* str) {
         str++;
     }
     while (*str && *str != ' ') {
-        if (!isdigit(*str++)) {
+        if (!isdigit(0xFF & *str++)) {
             return false;
         }
     }
@@ -79,11 +79,11 @@ void strtrim(const char* restrict src, char* dest, uint32_t dest_max) {
     // Trim start
     char* start = (char*) src;
     char* end = (char*) src + (strlen(src));
-    while (isspace(*start)) {
+    while (isspace(0xFF & *start)) {
         start++;
     }
     // Trim end
-    while (!*end || isspace(*end)) {
+    while (!*end || isspace(0xFF & *end)) {
         end--;
     }
     for (uint32_t i = 0; (i < dest_max) && (start <= end); i++) {
