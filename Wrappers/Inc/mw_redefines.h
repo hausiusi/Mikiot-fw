@@ -33,6 +33,8 @@ typedef struct {
     uint16_t pin;
     uint32_t mode;
     uint32_t pull;
+    uint32_t speed;
+    uint32_t alternate;
 } gpio_t;
 
 typedef struct {
