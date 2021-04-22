@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <error.h>
+#include "ioconfig.h"
 #include "mw_uart.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal_usart.h"
@@ -40,14 +41,14 @@ static uart_dma_conf_t uart_dma_configs[] = {
 		.uart.Init.Mode = UART_MODE_TX_RX,
 		.uart.Init.Parity = UART_PARITY_NONE,
 		.uart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
-		.gpiox_tx.gpiox = GPIOB,
-		.gpiox_tx.init.Pin = GPIO_PIN_6,
+		.gpiox_tx.gpiox = UART1_TX_GPIO,
+		.gpiox_tx.init.Pin = UART1_TX_PIN,
 		.gpiox_tx.init.Alternate = GPIO_AF7_USART1,
 		.gpiox_tx.init.Mode = GPIO_MODE_AF_PP,
 		.gpiox_tx.init.Speed = GPIO_SPEED_HIGH,
 		.gpiox_tx.init.Pull = GPIO_PULLUP,
-		.gpiox_rx.gpiox = GPIOB,
-		.gpiox_rx.init.Pin = GPIO_PIN_7,
+		.gpiox_rx.gpiox = UART1_RX_GPIO,
+		.gpiox_rx.init.Pin = UART1_RX_PIN,
 		.gpiox_rx.init.Alternate = GPIO_AF7_USART1,
 		.gpiox_rx.init.Mode = GPIO_MODE_AF_PP,
 		.gpiox_rx.init.Speed = GPIO_SPEED_HIGH,
@@ -93,14 +94,14 @@ static uart_dma_conf_t uart_dma_configs[] = {
 		.uart.Init.Mode = UART_MODE_TX_RX,
 		.uart.Init.Parity = UART_PARITY_NONE,
 		.uart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
-		.gpiox_tx.gpiox = GPIOD,
-		.gpiox_tx.init.Pin = GPIO_PIN_5,
+		.gpiox_tx.gpiox = UART2_TX_GPIO,
+		.gpiox_tx.init.Pin = UART2_TX_PIN,
 		.gpiox_tx.init.Alternate = GPIO_AF7_USART2,
 		.gpiox_tx.init.Mode = GPIO_MODE_AF_PP,
 		.gpiox_tx.init.Speed = GPIO_SPEED_HIGH,
 		.gpiox_tx.init.Pull = GPIO_PULLUP,
-		.gpiox_rx.gpiox = GPIOD,
-		.gpiox_rx.init.Pin = GPIO_PIN_6,
+		.gpiox_rx.gpiox = UART2_RX_GPIO,
+		.gpiox_rx.init.Pin = UART2_RX_PIN,
 		.gpiox_rx.init.Alternate = GPIO_AF7_USART2,
 		.gpiox_rx.init.Mode = GPIO_MODE_AF_PP,
 		.gpiox_rx.init.Speed = GPIO_SPEED_HIGH,

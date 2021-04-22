@@ -24,4 +24,15 @@
 #define ADC1_IN1_GPIO           GPIOB
 #define ADC1_IN1_GPIO_PIN       GPIO_PIN_0
 
+/* UART */
+#define UART1_TX_GPIO           GPIOB
+#define UART1_TX_PIN            GPIO_PIN_6
+#define UART1_RX_GPIO           GPIOB
+#define UART1_RX_PIN            GPIO_PIN_7
+
+#define UART2_TX_GPIO           GPIOD
+#define UART2_TX_PIN            GPIO_PIN_5
+#define UART2_RX_GPIO           GPIOD
+#define UART2_RX_PIN            GPIO_PIN_6
+
 #endif /* INC_IOCONFIG_H_ */
