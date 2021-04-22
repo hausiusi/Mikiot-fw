@@ -31,6 +31,7 @@ typedef struct {
     input_state_enum_t confirmed_state;
     uint32_t top_lvl;
     nvic_param_t nvic;
+    const char name[15];
 } input_t;
 
 #define timer_init_typedef TIM_HandleTypeDef
@@ -38,7 +39,7 @@ typedef struct {
 /*
  * Initialization of GPIO and timer
  */
-void mgr_inputs_init(uint32_t tim_period_us);
+void mgr_inputs_init(uint32_t tim_period_us, void* fp);
 
 /*
  * Handles input high-low transition or vice versa depending on input idle type respectively
