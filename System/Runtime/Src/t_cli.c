@@ -1,24 +1,24 @@
 /*
- * t_uart1_receiver.c
+ * t_cli.c
  *
  *  Created on: Jan 23, 2020
  *      Author: Zviad
  */
 
+#include <cli.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <mw_uart.h>
 #include <string.h>
-#include "cmdline.h"
 #include "os_loader.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
-static uint8_t uart1_rx_buffer[UART1_DMA_RX_BUFFER_SIZE];
+static uint8_t cli_rx_buffer[UART1_DMA_RX_BUFFER_SIZE];
 
 static void _cli_data_received(uart_data_t* uart_data) {
-    memcpy(uart1_rx_buffer, uart_data->buffer, uart_data->allocated_length);
-    xTaskNotifyFromISR(os_get_task_handler(CmdlineHandler), 0,
+    memcpy(cli_rx_buffer, uart_data->buffer, uart_data->allocated_length);
+    xTaskNotifyFromISR(os_get_task_handler(CliHandler), 0,
             eSetValueWithoutOverwrite, NULL);
 }
 
@@ -34,15 +34,14 @@ extern void thread_cmdline() {
         watermark_current = uxTaskGetStackHighWaterMark( NULL);
         if (watermark_old > watermark_current) {
             watermark_old = watermark_current;
-            debug_note("UART1 receiver task high watermark:%lu\n",
-                    watermark_current);
+            debug_note("CLI task high watermark:%lu\n", watermark_current);
         }
         xTaskNotifyWait( pdFALSE, /* Don't clear bits on entry. */
         ULONG_MAX, /* Clear all bits on exit. */
         &notify_value, /* Stores the notified value. */
         portMAX_DELAY);
-        cmd_process(uart1_rx_buffer);
-        memset(uart1_rx_buffer, 0, UART1_DMA_RX_BUFFER_SIZE);
+        cli_cmd_process(cli_rx_buffer);
+        memset(cli_rx_buffer, 0, UART1_DMA_RX_BUFFER_SIZE);
         vTaskDelay(0);
     }
 }

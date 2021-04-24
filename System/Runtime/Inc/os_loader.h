@@ -1,5 +1,5 @@
 /*
- * os_starter.h
+ * os_loader.h
  *
  *  Created on: Dec 22, 2019
  *      Author: Zviad
@@ -14,14 +14,14 @@
 /* @formatter:off */
 
 typedef enum task_index {
-	InitHandler,
-	TestHandler,
-	CmdlineHandler,
-	TaskMgrHandler,
-	OverallStateMonitorHandler,
-	IoMgrHandler,
-	AdcHandler,
-	GprsHandler,
+    InitHandler,
+    TestHandler,
+    CliHandler,
+    TaskMgrHandler,
+    OverallStateMonitorHandler,
+    IoMgrHandler,
+    AdcHandler,
+    GprsHandler,
 }task_index_enum_t;
 
 /* @formatter:on */

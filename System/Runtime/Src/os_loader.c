@@ -1,5 +1,5 @@
 /*
- * os_starter.c
+ * os_loader.c
  *
  *  Created on: Feb 20, 2019
  *      Author: Zviad
@@ -40,7 +40,7 @@ startup_task_t startup_tasks[] =
 {
 		{.result = 0, .thread = thread_init, .name = "Init", .stack_depth = configMINIMAL_STACK_SIZE, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_test, .name = "Test", .stack_depth = 256, .parameters = NULL, .priority = 1},
-		{.result = 0, .thread = thread_cmdline, .name = "CMD line", .stack_depth = 512, .parameters = NULL, .priority = 1},
+		{.result = 0, .thread = thread_cmdline, .name = "CLI", .stack_depth = 512, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_taskmgr, .name = "Taskmgr", .stack_depth = 512, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_overal_state_monitor, .name = "Overall", .stack_depth = 256, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_iomgr, .name = "IOmgr", .stack_depth = 128, .parameters = NULL, .priority = 1},
@@ -72,4 +72,3 @@ void os_start() {
 TaskHandle_t os_get_task_handler(task_index_enum_t task_index) {
     return startup_tasks[task_index].created_task;
 }
-

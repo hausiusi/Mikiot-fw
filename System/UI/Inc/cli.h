@@ -1,12 +1,12 @@
 /*
- * cmdline.h
+ * cli.h
  *
  *  Created on: Jan 21, 2020
  *      Author: Zviad
  */
 
-#ifndef UI_INC_CMDLINE_H_
-#define UI_INC_CMDLINE_H_
+#ifndef UI_INC_CLI_H_
+#define UI_INC_CLI_H_
 
 #include <inttypes.h>
 
@@ -18,6 +18,6 @@ typedef struct _cmdstruct {
     char* help;
 } cmd_struct_t;
 
-void cmd_process(void* input);
+void cli_cmd_process(void* input);
 
-#endif /* UI_INC_CMDLINE_H_ */
+#endif /* UI_INC_CLI_H_ */

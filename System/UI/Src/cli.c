@@ -1,14 +1,14 @@
 /*
- * cmdline.c
+ * cli.c
  *
  *  Created on: Jan 21, 2020
  *      Author: Zviad
  */
 
+#include <cli.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-#include "cmdline.h"
 #include "macrodefs.h"
 #include "debug.h"
 #include "bp_player.h"
@@ -128,7 +128,7 @@ static void _taskmgr(void* args) {
 
 static void _time(void* args) {
     debug_p("PERF: Measuring execution time for: '%s'\n", (char* )args);
-    uint32_t time_us = prf_func_exec_time_get(cmd_process(args));
+    uint32_t time_us = prf_func_exec_time_get(cli_cmd_process(args));
     debug_p("PERF: Execution took %lu us\n", time_us);
 }
 
@@ -516,7 +516,7 @@ static void _perfinfo(void* args) {
     debug_p("Uptime           : %ums\n", perfinfo.uptime);
 }
 
-void cmd_process(void* input) {
+void cli_cmd_process(void* input) {
     for (int i = 0; i < array_count(commands); i++) {
         if (!strncmp(commands[i].cmd, (char*) input,
                 strlen((char*) commands[i].cmd))) {
