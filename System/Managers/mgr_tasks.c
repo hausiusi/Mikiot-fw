@@ -20,7 +20,7 @@ typedef struct {
 
 void thread_init();
 void thread_test();
-void thread_cmdline();
+void thread_cli();
 void thread_taskmgr();
 void thread_overal_state_monitor();
 void thread_iomgr();
@@ -31,7 +31,7 @@ void thread_gprs();
 static const runnable_t runnables[] = {
         { .task_function = thread_init, .name = "init" },
         { .task_function = thread_test, .name = "test" },
-        { .task_function = thread_cmdline, .name = "cmdline" },
+        { .task_function = thread_cli, .name = "cli" },
         { .task_function = thread_taskmgr, .name = "taskmgr" },
         { .task_function = thread_overal_state_monitor, .name = "overal" },
         { .task_function = thread_iomgr, .name = "iomgr" },

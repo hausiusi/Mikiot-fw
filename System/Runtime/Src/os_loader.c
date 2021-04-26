@@ -27,7 +27,7 @@ typedef struct startup_task {
 
 void thread_init();
 void thread_test();
-void thread_cmdline();
+void thread_cli();
 void thread_taskmgr();
 void thread_overal_state_monitor();
 void thread_iomgr();
@@ -40,7 +40,7 @@ startup_task_t startup_tasks[] =
 {
 		{.result = 0, .thread = thread_init, .name = "Init", .stack_depth = configMINIMAL_STACK_SIZE, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_test, .name = "Test", .stack_depth = 256, .parameters = NULL, .priority = 1},
-		{.result = 0, .thread = thread_cmdline, .name = "CLI", .stack_depth = 512, .parameters = NULL, .priority = 1},
+		{.result = 0, .thread = thread_cli, .name = "CLI", .stack_depth = 512, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_taskmgr, .name = "Taskmgr", .stack_depth = 512, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_overal_state_monitor, .name = "Overall", .stack_depth = 256, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_iomgr, .name = "IOmgr", .stack_depth = 128, .parameters = NULL, .priority = 1},

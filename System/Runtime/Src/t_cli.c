@@ -22,20 +22,13 @@ static void _cli_data_received(uart_data_t* uart_data) {
             eSetValueWithoutOverwrite, NULL);
 }
 
-extern void thread_cmdline() {
+extern void thread_cli() {
     uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart1ConfigIndex);
     conf->rec_data_process = _cli_data_received;
     mw_uart_dma_init(conf);
     debug_info("UART1 initialized BR: %i\n", conf->uart.Init.BaudRate);
     uint32_t notify_value = 0;
     for (;;) {
-        static UBaseType_t watermark_current = 0;
-        static UBaseType_t watermark_old = 255;
-        watermark_current = uxTaskGetStackHighWaterMark( NULL);
-        if (watermark_old > watermark_current) {
-            watermark_old = watermark_current;
-            debug_note("CLI task high watermark:%lu\n", watermark_current);
-        }
         xTaskNotifyWait( pdFALSE, /* Don't clear bits on entry. */
         ULONG_MAX, /* Clear all bits on exit. */
         &notify_value, /* Stores the notified value. */
