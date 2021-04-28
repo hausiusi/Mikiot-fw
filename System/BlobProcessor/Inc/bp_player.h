@@ -8,6 +8,8 @@
 #ifndef BLOBPROCESSOR_INC_BP_PLAYER_H_
 #define BLOBPROCESSOR_INC_BP_PLAYER_H_
 
+#include <inttypes.h>
+
 /*
  * Converts passed bytes into BLOB and Plays
  */

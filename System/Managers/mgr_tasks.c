@@ -26,6 +26,7 @@ void thread_overal_state_monitor(void* args);
 void thread_iomgr(void* args);
 void thread_adc(void* args);
 void thread_gprs(void* args);
+void thread_blob(void* args);
 
 /* @formatter:off */
 static const runnable_t runnables[] = {
@@ -36,7 +37,8 @@ static const runnable_t runnables[] = {
         { .task_function = thread_overal_state_monitor, .name = "overal" },
         { .task_function = thread_iomgr, .name = "iomgr" },
         { .task_function = thread_adc, .name = "adc" },
-        { .task_function = thread_gprs, .name = "gprs" }
+        { .task_function = thread_gprs, .name = "gprs" },
+        { .task_function = thread_blob, .name = "blob" }
 };
 /* @formatter:on */
 

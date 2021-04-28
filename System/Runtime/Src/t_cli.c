@@ -5,11 +5,11 @@
  *      Author: Zviad
  */
 
-#include <cli.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <mw_uart.h>
 #include <string.h>
+#include "cli.h"
 #include "os_loader.h"
 #include "FreeRTOS.h"
 #include "task.h"

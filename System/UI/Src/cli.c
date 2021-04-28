@@ -85,6 +85,8 @@ static void _play_blob(void* args) {
      * And add one at the end because the last one doesn't have a space
      * TODO: Until tests will be done example blob command is bellow:
      * blob 15 00 00 00 00 00 04 00 AA 10 00 00 00 00 04 00 AA 02 00 00 11 */
+    static uint8_t blob_instance = 0;
+    char name_to_assign[configMAX_TASK_NAME_LEN];
     uint32_t len = (strlen(args) / 3) + 1;
     if (len > CMD_BLOB_MAX_SIZE) {
         error_report(5, CmdlineError);
@@ -104,7 +106,9 @@ static void _play_blob(void* args) {
         }
         args++;
     }
-    bp_player_play(blob_bytes);
+    sprintf(name_to_assign, "BLOB_PLAYER%i", ++blob_instance);
+    mgr_tasks_create_by_name("blob", name_to_assign,
+    configMINIMAL_STACK_SIZE + len, 1, blob_bytes);
 }
 
 static void _datetime(void* args) {
