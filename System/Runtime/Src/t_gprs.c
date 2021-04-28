@@ -42,7 +42,7 @@ static void _debug_gprs_state() {
     debug_p(" Elapsed:  %ims\n", _gprs_state.elapsed_ms);
 }
 
-extern void thread_gprs() {
+extern void thread_gprs(void* args) {
     uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart2ConfigIndex);
     conf->rec_data_process = _gprs_data_received;
     mw_uart_dma_init(conf);

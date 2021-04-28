@@ -53,7 +53,7 @@ static void _toggle_leds(GPIO_TypeDef* gpio, uint16_t pin) {
     }
 }
 
-extern void thread_iomgr() {
+extern void thread_iomgr(void* args) {
     lib_ringbuffer_init(&input_rb, (uint8_t*) detected_inputs, sizeof(input_t),
             sizeof(detected_inputs), true, _input_detection_overlapped);
     _gpio_init();

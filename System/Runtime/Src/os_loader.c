@@ -25,14 +25,14 @@ typedef struct startup_task {
     TaskHandle_t created_task;
 } startup_task_t;
 
-void thread_init();
-void thread_test();
-void thread_cli();
-void thread_taskmgr();
-void thread_overal_state_monitor();
-void thread_iomgr();
-void thread_adc();
-void thread_gprs();
+void thread_init(void* args);
+void thread_test(void* args);
+void thread_cli(void* args);
+void thread_taskmgr(void* args);
+void thread_overal_state_monitor(void* args);
+void thread_iomgr(void* args);
+void thread_adc(void* args);
+void thread_gprs(void* args);
 
 /* @formatter:off */
 

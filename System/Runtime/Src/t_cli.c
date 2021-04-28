@@ -22,7 +22,7 @@ static void _cli_data_received(uart_data_t* uart_data) {
             eSetValueWithoutOverwrite, NULL);
 }
 
-extern void thread_cli() {
+extern void thread_cli(void* args) {
     uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart1ConfigIndex);
     conf->rec_data_process = _cli_data_received;
     mw_uart_dma_init(conf);

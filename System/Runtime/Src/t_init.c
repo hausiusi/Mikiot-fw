@@ -36,7 +36,7 @@ static void _rtc_init() {
 #endif
 }
 
-extern void thread_init() {
+extern void thread_init(void* args) {
     mw_timebase_init(1000);
     _rtc_init();
     for (;;) {

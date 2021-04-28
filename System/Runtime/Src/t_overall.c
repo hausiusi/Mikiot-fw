@@ -17,7 +17,7 @@
 
 static overall_t overall_state;
 
-extern void thread_overal_state_monitor() {
+extern void thread_overal_state_monitor(void* args) {
     rtc_time_t* rtc_time;
     uint32_t seconds_tmp = 0, subseconds_tmp = 0;
     overall_state.base_ticks = mw_timebase_ticks_get();

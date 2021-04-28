@@ -27,7 +27,7 @@ void adc_tc_detected(void* arg, uint32_t len) {
             eSetValueWithoutOverwrite, NULL);
 }
 
-extern void thread_adc() {
+extern void thread_adc(void* args) {
     adc_uiconf_t* adc_uiconf = mgr_adc_get_uiconf();
     uint32_t notify_value = 0;
     uint32_t notified = pdFALSE;

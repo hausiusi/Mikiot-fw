@@ -19,7 +19,7 @@ void _system_load_print(TaskStatus_t* const tasks_statuses_current,
 
 static bool_t taskmgr_printing;
 
-extern void thread_taskmgr() {
+extern void thread_taskmgr(void* args) {
     tasks_statuses_t* tasks_statuses;
     for (;;) {
         tasks_statuses = mgr_tasks_get_system_state();
