@@ -16,5 +16,6 @@
 #define check_bit(x, y) (1 & ( x >> y)) // Checks if bit in a register is set or not
 #define is_between(x, a, b) (((x) > (a)) && ((x) < (b))) // Checks if x is more than a and less than b
 #define is_range(x, a, b) (((x) >= (a)) && ((x) <= (b))) // Checks if x is more or equal a and less or equal than b
+#define bcd2bin_8b(bcd)  (((bcd & 0xF0) >> 4) + (bcd & 0x0F))
 
 #endif /* INC_MACRODEFS_H_ */

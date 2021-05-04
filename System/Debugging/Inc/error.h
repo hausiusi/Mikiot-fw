@@ -25,6 +25,8 @@ typedef enum {
 	BlobProcessorError = 6,
 	AdcError = 7,
 	UartError = 8,
+	HeapError = 9,
+	LibError = 10,
 } error_enum_t;
 // @formatter:on
 typedef struct {

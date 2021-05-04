@@ -22,6 +22,7 @@ typedef enum task_index {
     IoMgrHandler,
     AdcHandler,
     GprsHandler,
+    McronHandler,
 }task_index_enum_t;
 
 /* @formatter:on */

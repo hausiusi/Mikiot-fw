@@ -19,6 +19,7 @@
 #include "mgr_gprs.h"
 #include "mgr_rtc.h"
 #include "mgr_tasks.h"
+#include "mgr_mcron.h"
 #include "os_loader.h"
 #include "performance.h"
 #include "utils.h"
@@ -36,6 +37,7 @@ static void _adc(void* args);
 static void _gprs(void* args);
 static void _kill(void* args);
 static void _create(void* args);
+static void _mcron(void* args);
 static void _perfinfo(void* args);
 static void _dbglevel(void* args);
 static void _version(void* args);
@@ -56,6 +58,7 @@ static cmd_struct_t commands[] = {
 	{ "gprs", _gprs, "Controls GPRS modem" },
 	{ "kill", _kill, "Kills the provided task by its name" },
 	{ "create", _create, "Creates the task by provided name and parameters" },
+	{ "mcron", _mcron, "Creates the Mikiot cron task" },
 	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
 	{ "debuglevel", _dbglevel, "Gets or sets debug level" },
 	{ "version", _version, "Prints current version" },
@@ -444,7 +447,157 @@ static void _create(void* args) {
         mgr_tasks_list_available_runnables();
         return;
     }
-    mgr_tasks_create_by_name(task_name, reg_name, stack_depth, priority, NULL);
+    if (mgr_tasks_create_by_name(task_name, reg_name, stack_depth, priority,
+    NULL)) {
+        debug_p("The task `%s` (aka `%s`) created successfully\n", task_name,
+                reg_name);
+    } else {
+        debug_p("Task creation failed\n");
+    }
+}
+
+void mcron_test(void* args) {
+    debug_p("MCRON called the function!\n");
+}
+
+static void _mcron(void* args) {
+    char* token = NULL;
+    char* rest = args;
+    mcron_item_t mcron = {
+            .args = NULL, .fn = NULL, .free = NULL, .id = 0,
+            .setup.ticks.value = 60000, .variant = 0 };
+    /* The mask to control which arguments are passed. Some of them are more prioritized than others */
+    uint8_t setup_mask = 0;
+    while (token = strtok_r(rest, " ", &rest), token != NULL) {
+        if (!strncmp(token, "add", 3)) {
+            while (token = strtok_r(rest, " ", &rest), token != NULL) {
+                if (!strncmp(token, "cmd", 2)) {
+                    mcron.fn = cli_cmd_process;
+                    uint32_t len = strlen(rest);
+                    if (len == 0) {
+                        debug_p(
+                                "The argument `cmd` must be followed by the cli string\n");
+                        return;
+                    }
+                    /* Copy also null terminator */
+                    mgr_mcron_deep_copy_args(&mcron, rest, len + 1);
+                    set_bit(setup_mask, 7);
+                    /* Break loop here, as `cmd` must be the last argument. */
+                    break;
+                } else if (!strncmp(token, "variant", 7)) {
+                    token = strtok_r(rest, " ", &rest);
+                    uint32_t variant = mgr_mcron_description_to_variant(token);
+                    if (strlen(token) == 0 || variant == 0) {
+                        debug_p(
+                                "The argument `variant` must be followed by one of these following:\n");
+                        mgr_mcron_time_setup_variants_print();
+                        return;
+                    }
+                    mcron.variant = variant;
+                    set_bit(setup_mask, 6);
+                } else if (!strncmp(token, "timebase", 8)) {
+                    if (mcron.variant == 0) {
+                        debug_p(
+                                "Before `timebase` the `variant` argument must be provided\n");
+                        return;
+                    }
+                    if (mcron.variant == McronTaskVariantPeriodic
+                            || mcron.variant == McronTaskVariantDelayed) {
+                        token = strtok_r(rest, " ", &rest);
+                        if (!is_integer(token)) {
+                            debug_p(
+                                    "The `timebase` argument for periodic and delayed tasks must be followed by a number\n");
+                            return;
+                        }
+                        mcron.setup.ticks.value = atoi(token);
+                    }
+                    if (mcron.variant == McronTaskVariantPeriodicLimited) {
+                        token = strtok_r(rest, " ", &rest);
+                        char* token2 = strtok_r(rest, " ", &rest);
+                        if (!is_integer(token) || !is_integer(token2)) {
+                            debug_p(
+                                    "The `timebase` argument for `limited` variant must be followed by two numbers `delay` `count`\n");
+                            return;
+                        }
+                        mcron.setup.ticks.value = atoi(token);
+                        mcron.setup.ticks.exec_count =
+                                mcron.target.ticks.exec_count = atoi(token2);
+                    }
+#if (MCONF_RTC_ON == 1)
+                    if (mcron.variant == McronTaskVariantHourly) {
+                        mcron.setup.exec_date.hour = mgr_rtc_get_time()->Hours
+                                + 1;
+                    } else if (mcron.variant == McronTaskVariantDaily) {
+                        mcron.setup.exec_date.day = mgr_rtc_get_date()->Date
+                                + 1;
+                    } else if (mcron.variant == McronTaskVariantWeekly) {
+                        token = strtok_r(rest, " ", &rest);
+                        if (!is_integer(token)) {
+                            debug_p(
+                                    "The `timebase` argument for weekday tasks must be followed by a number between 0 and 6\n");
+                            return;
+                        }
+                        mcron.setup.exec_date.weekday = atoi(token);
+                        if (!is_range(mcron.setup.exec_date.weekday, 0, 6)) {
+                            debug_p("Weekday must be between 0, 6\n");
+                        }
+                    } else if (mcron.variant == McronTaskVariantMonthly) {
+                        mcron.setup.exec_date.month = mgr_rtc_get_date()->Month
+                                + 1;
+                    } else if (mcron.variant == McronTaskVariantYearly) {
+                        mcron.setup.exec_date.year = mgr_rtc_get_date()->Year
+                                + 1;
+                    } else if (mcron.variant == McronTaskVariantOnceOnDate) {
+                        int day, month, year, hour, minute, second;
+                        sscanf(rest, "%d.%d.%d-%d:%d:%d", &day, &month, &year,
+                                &hour, &minute, &second);
+                        ASSERT_DATE_ELEMENT(month, 1, 12);
+                        ASSERT_DATE_ELEMENT(year, 0, 99);
+                        ASSERT_DATE_ELEMENT(day, 1,
+                                mgr_rtc_get_max_days_in_month(month, year));
+                        ASSERT_DATE_ELEMENT(hour, 0, 23);
+                        ASSERT_DATE_ELEMENT(minute, 0, 59);
+                        ASSERT_DATE_ELEMENT(second, 0, 59);
+                        mcron.setup.exec_date.day = day;
+                        mcron.setup.exec_date.month = month;
+                        mcron.setup.exec_date.year = year;
+                        mcron.setup.exec_date.hour = hour;
+                        mcron.setup.exec_date.minute = minute;
+                        mcron.setup.exec_date.second = second;
+                    }
+#endif
+                    set_bit(setup_mask, 5);
+                }
+            }
+            if (setup_mask >= 192) {
+                mgr_mcron_add(&mcron);
+                return;
+            } else {
+                debug_p(
+                        "To set up mcron must be cmd and variant provided. Mask=%i\n",
+                        setup_mask);
+            }
+        } else if (!strncmp(token, "remove", 6)) {
+            token = strtok_r(rest, " ", &rest);
+            if (!is_integer(token)) {
+                debug_p(
+                        "To remove the mcron task mcron id must be provided. Check mcron list command\n");
+                return;
+            }
+            mcron.id = atoi(token);
+            mgr_mcron_remove_by_item_id(&mcron);
+            return;
+        } else if (!strncmp(token, "list", 4)) {
+            mgr_mcron_tasks_list_print();
+            return;
+        }
+    }
+
+    debug_p("The mcron command needs arguments. They can be:\n");
+    debug_p(
+            "    add    - adds the new mcron task, is followed by: `variant`, `timebase` and `cmd` arguments\n");
+    debug_p("    remove - removes the existing mcron task\n");
+    debug_p("    list   - lists all mcron task\n");
 }
 
 static void _dbglevel(void* args) {
