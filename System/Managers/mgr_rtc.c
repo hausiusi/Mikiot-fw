@@ -5,19 +5,10 @@
  *      Author: Zviad
  */
 
-#include "debug.h"
 #include "mgr_rtc.h"
 #include "mw_rtc.h"
 #include "macrodefs.h"
 #include "math.h"
-
-static const uint8_t days_in_a_month[] = {
-        31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-#define ASSERT_DATE_ELEMENT(DATE_ELEMENT, from, to) { if (!is_range(DATE_ELEMENT, from, to)) { \
-													debug_p("Argument '"#DATE_ELEMENT "' should be an integer from %i to %i\n", from, to); \
-													return; }\
-													}
 
 static void _set_week_day(rtc_date_t* date);
 
@@ -39,13 +30,21 @@ rtc_date_t* mgr_rtc_get_date() {
     return &mgr_rtc_date;
 }
 
+uint8_t mgr_rtc_get_max_days_in_month(uint8_t month, uint8_t year) {
+    static const uint8_t days_in_a_month[] = {
+            31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    month -= 1;
+    return (month == 1) && (year % 4 != 0) ?
+            days_in_a_month[month] - 1 : days_in_a_month[month];
+}
+
 void mgr_rtc_set_strf(const char* dt) {
     int day, month, year, hour, minute, second;
     sscanf(dt, "%d-%d-%d %d:%d:%d", &day, &month, &year, &hour, &minute,
             &second);
     ASSERT_DATE_ELEMENT(month, 1, 12);
-    ASSERT_DATE_ELEMENT(day, 1, days_in_a_month[month - 1]);
     ASSERT_DATE_ELEMENT(year, 0, 99);
+    ASSERT_DATE_ELEMENT(day, 1, mgr_rtc_get_max_days_in_month(month, year));
     ASSERT_DATE_ELEMENT(hour, 0, 23);
     ASSERT_DATE_ELEMENT(minute, 0, 59);
     ASSERT_DATE_ELEMENT(second, 0, 59);

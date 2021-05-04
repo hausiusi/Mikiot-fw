@@ -10,6 +10,12 @@
 
 #include <inttypes.h>
 #include "mw_redefines.h"
+#include "debug.h"
+
+#define ASSERT_DATE_ELEMENT(DATE_ELEMENT, from, to) { if (!is_range(DATE_ELEMENT, from, to)) { \
+                                                    debug_p("Argument '"#DATE_ELEMENT "' should be an integer from %i to %i\n", from, to); \
+                                                    return; }\
+                                                    }
 
 rtc_handle_t mgr_rtc_handle;
 rtc_time_t mgr_rtc_time;
@@ -24,6 +30,8 @@ rtc_time_t* mgr_rtc_get_time();
 rtc_date_t* mgr_rtc_get_date();
 
 void mgr_rtc_set_strf(const char* dt);
+
+uint8_t mgr_rtc_get_max_days_in_month(uint8_t month, uint8_t year);
 
 void mgr_rtc_print_date();
 

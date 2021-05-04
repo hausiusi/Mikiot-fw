@@ -8,14 +8,24 @@
 #ifndef INC_MIKIOT_CONFIG_H_
 #define INC_MIKIOT_CONFIG_H_
 
+#include "FreeRTOS.h"
 #include "mock_error.h"
 #include "error.h"
 #include "stm32f4xx_hal_gpio.h"
+#include "stm32f4xx_hal_rtc.h"
 
 /* When set to 1 project will be compiled with unit tests. */
 #define COMPILE_WITH_UNIT_TESTS           0
 
-#define RTC_ON                            1
+/* Real time clock */
+#define MCONF_RTC_ON                      1
+#define MCONF_RTC_TIME_FORMAT             RTC_HOURFORMAT_24
+
+#if (MCONF_RTC_TIME_FORMAT == RTC_HOURFORMAT_24)
+#define MCONF_RTC_MAX_HOURS               24
+#else
+#define MCONF_RTC_MAX_HOURS               12
+#endif
 
 /* UART buffer sizes */
 #define MCONF_UART1_DMA_RX_BUFFER_SIZE    512
@@ -44,5 +54,9 @@ char tf_debug_array[MCONF_DEBUG_BUFFER_SIZE];
 #define mikiot_error_report(id, type)     error_report_(__FILE__, __LINE__, __FUNCTION__, id, #type)
 #define debug_put_log(dbg_array)          (mw_uart_dma_string_transmit(Uart1ConfigIndex, dbg_array))
 #endif
+
+/* The malloc and free */
+#define mconf_malloc                      pvPortMalloc
+#define mconf_free                        vPortFree
 
 #endif /* INC_MIKIOT_CONFIG_H_ */

@@ -18,8 +18,8 @@
 #include "error.h"
 
 static void _rtc_init() {
-#if (RTC_ON == 1)
-    mgr_rtc_init(RTC_HOURFORMAT_24);
+#if (MCONF_RTC_ON == 1)
+    mgr_rtc_init(MCONF_RTC_TIME_FORMAT);
     /* Time */
     mgr_rtc_time.Hours = 2;
     mgr_rtc_time.Minutes = 10;

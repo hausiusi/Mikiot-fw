@@ -35,8 +35,8 @@ extern void thread_overal_state_monitor(void* args) {
         mgr_rtc_get_date();
 
         // RTC is ok if subseconds and seconds are changing (increasing)
-        overall_state.rtc_ok = !(rtc_time->SubSeconds == subseconds_tmp
-                && rtc_time->Seconds == seconds_tmp);
+        overall_state.rtc_ok = !((rtc_time->SubSeconds == subseconds_tmp)
+                && (rtc_time->Seconds == seconds_tmp));
         subseconds_tmp = rtc_time->SubSeconds;
         seconds_tmp = rtc_time->Seconds;
         overall_state.task_statuses = mgr_tasks_get_last_measured();
