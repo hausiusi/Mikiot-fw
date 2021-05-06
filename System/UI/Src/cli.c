@@ -403,10 +403,16 @@ static void _gprs(void* args) {
 }
 
 static void _kill(void* args) {
-    if (mgr_tasks_kill_by_name(args)) {
-        debug_p("Task '%s' successfully terminated\n", args);
+    char* task_name = (char*) args;
+    if (!strlen(task_name)) {
+        debug_p(
+                "The kill command requires argument task name. They can be found in taskmgr\n");
+        return;
+    }
+    if (mgr_tasks_kill_by_name(task_name)) {
+        debug_p("Task '%s' successfully terminated\n", task_name);
     } else {
-        debug_error("Task '%s' couldn't be terminated\n", args);
+        debug_error("Task '%s' couldn't be terminated\n", task_name);
     }
 }
 
