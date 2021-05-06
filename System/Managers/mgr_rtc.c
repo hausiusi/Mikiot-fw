@@ -17,17 +17,16 @@ void mgr_rtc_init(uint32_t hour_format) {
 }
 
 void mgr_rtc_set(rtc_time_t* time, rtc_date_t* date) {
+    _set_week_day(date);
     mw_rtc_set(&mgr_rtc_handle, time, date);
 }
 
-rtc_time_t* mgr_rtc_get_time() {
-    mw_rtc_get_time(&mgr_rtc_handle, &mgr_rtc_time);
-    return &mgr_rtc_time;
+void mgr_rtc_get_time(rtc_time_t* rtc_time) {
+    mw_rtc_get_time(&mgr_rtc_handle, rtc_time);
 }
 
-rtc_date_t* mgr_rtc_get_date() {
-    mw_rtc_get_date(&mgr_rtc_handle, &mgr_rtc_date);
-    return &mgr_rtc_date;
+void mgr_rtc_get_date(rtc_date_t* rtc_date) {
+    mw_rtc_get_date(&mgr_rtc_handle, rtc_date);
 }
 
 uint8_t mgr_rtc_get_max_days_in_month(uint8_t month, uint8_t year) {
@@ -40,6 +39,8 @@ uint8_t mgr_rtc_get_max_days_in_month(uint8_t month, uint8_t year) {
 
 void mgr_rtc_set_strf(const char* dt) {
     int day, month, year, hour, minute, second;
+    rtc_date_t rtc_date = { 0 };
+    rtc_time_t rtc_time = { 0 };
     sscanf(dt, "%d-%d-%d %d:%d:%d", &day, &month, &year, &hour, &minute,
             &second);
     ASSERT_DATE_ELEMENT(month, 1, 12);
@@ -49,24 +50,27 @@ void mgr_rtc_set_strf(const char* dt) {
     ASSERT_DATE_ELEMENT(minute, 0, 59);
     ASSERT_DATE_ELEMENT(second, 0, 59);
 
-    mgr_rtc_date.Year = year;
-    mgr_rtc_date.Month = month;
-    mgr_rtc_date.Date = day;
+    rtc_date.Year = year;
+    rtc_date.Month = month;
+    rtc_date.Date = day;
 
-    _set_week_day(&mgr_rtc_date);
-
-    mgr_rtc_time.Hours = hour;
-    mgr_rtc_time.Minutes = minute;
-    mgr_rtc_time.Seconds = second;
-    mgr_rtc_set(&mgr_rtc_time, &mgr_rtc_date);
+    rtc_time.Hours = hour;
+    rtc_time.Minutes = minute;
+    rtc_time.Seconds = second;
+    mgr_rtc_set(&rtc_time, &rtc_date);
 }
 
 void mgr_rtc_print_date() {
-    mw_rtc_get_time(&mgr_rtc_handle, &mgr_rtc_time);
-    mw_rtc_get_date(&mgr_rtc_handle, &mgr_rtc_date);
-    debug_p("Date: %i-%i-%i - Time: %i:%i:%i\n", mgr_rtc_date.Date,
-            mgr_rtc_date.Month, mgr_rtc_date.Year, mgr_rtc_time.Hours,
-            mgr_rtc_time.Minutes, mgr_rtc_time.Seconds);
+    rtc_date_t rtc_date = { 0 };
+    rtc_time_t rtc_time = { 0 };
+    mw_rtc_get_time(&mgr_rtc_handle, &rtc_time);
+    mw_rtc_get_date(&mgr_rtc_handle, &rtc_date);
+    static const char* weekday_map[] = {
+            "N/A", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+            "Saturday", "Sunday" };
+    debug_p("Date: %i-%i-%i - Time: %i:%i:%i Weekday: %s\n", rtc_date.Date,
+            rtc_date.Month, rtc_date.Year, rtc_time.Hours, rtc_time.Minutes,
+            rtc_time.Seconds, weekday_map[rtc_date.WeekDay]);
 }
 
 /* Weekday calculation with Zeller's Rule and set */

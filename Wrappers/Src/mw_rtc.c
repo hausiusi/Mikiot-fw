@@ -15,7 +15,7 @@ void mw_rtc_init(rtc_handle_t* hrtc, const uint32_t hour_format) {
 
     /* Initialize RTC Only */
     hrtc->Instance = RTC;
-    hrtc->Init.HourFormat = RTC_HOURFORMAT_24;
+    hrtc->Init.HourFormat = hour_format;
     hrtc->Init.AsynchPrediv = 127;
     hrtc->Init.SynchPrediv = 255;
     hrtc->Init.OutPut = RTC_OUTPUT_DISABLE;

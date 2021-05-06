@@ -16,9 +16,9 @@ void overal_state_analyze(overall_t* overall_state) {
     if (!overall_state->base_time_ok) {
         debug_warn("Base time doesn't work\n");
     }
-#if (RTC_ON == 1)
+#if (MCONF_RTC_ON == 1)
     if (!overall_state->rtc_ok) {
-        debug_warn("RTC doesn't work\n");
+        debug_warn("RTC seems stopped\n");
     }
 #endif
 

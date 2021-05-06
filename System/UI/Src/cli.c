@@ -524,12 +524,14 @@ static void _mcron(void* args) {
                                 mcron.target.ticks.exec_count = atoi(token2);
                     }
 #if (MCONF_RTC_ON == 1)
+                    rtc_date_t rtc_date = { 0 };
+                    rtc_time_t rtc_time = { 0 };
+                    mgr_rtc_get_time(&rtc_time);
+                    mgr_rtc_get_date(&rtc_date);
                     if (mcron.variant == McronTaskVariantHourly) {
-                        mcron.setup.exec_date.hour = mgr_rtc_get_time()->Hours
-                                + 1;
+                        mcron.setup.exec_date.hour = rtc_time.Hours + 1;
                     } else if (mcron.variant == McronTaskVariantDaily) {
-                        mcron.setup.exec_date.day = mgr_rtc_get_date()->Date
-                                + 1;
+                        mcron.setup.exec_date.day = rtc_date.Date + 1;
                     } else if (mcron.variant == McronTaskVariantWeekly) {
                         token = strtok_r(rest, " ", &rest);
                         if (!is_integer(token)) {
@@ -542,11 +544,9 @@ static void _mcron(void* args) {
                             debug_p("Weekday must be between 0, 6\n");
                         }
                     } else if (mcron.variant == McronTaskVariantMonthly) {
-                        mcron.setup.exec_date.month = mgr_rtc_get_date()->Month
-                                + 1;
+                        mcron.setup.exec_date.month = rtc_date.Month + 1;
                     } else if (mcron.variant == McronTaskVariantYearly) {
-                        mcron.setup.exec_date.year = mgr_rtc_get_date()->Year
-                                + 1;
+                        mcron.setup.exec_date.year = rtc_date.Year + 1;
                     } else if (mcron.variant == McronTaskVariantOnceOnDate) {
                         int day, month, year, hour, minute, second;
                         sscanf(rest, "%d.%d.%d-%d:%d:%d", &day, &month, &year,

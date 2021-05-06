@@ -21,18 +21,19 @@ static void _rtc_init() {
 #if (MCONF_RTC_ON == 1)
     mgr_rtc_init(MCONF_RTC_TIME_FORMAT);
     /* Time */
-    mgr_rtc_time.Hours = 2;
-    mgr_rtc_time.Minutes = 10;
-    mgr_rtc_time.Seconds = 40;
-    mgr_rtc_time.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-    mgr_rtc_time.StoreOperation = RTC_STOREOPERATION_RESET;
+    rtc_date_t rtc_date = { 0 };
+    rtc_time_t rtc_time = { 0 };
+    rtc_time.Hours = 2;
+    rtc_time.Minutes = 10;
+    rtc_time.Seconds = 40;
+    rtc_time.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+    rtc_time.StoreOperation = RTC_STOREOPERATION_RESET;
 
     /* Set date and time */
-    mgr_rtc_date.WeekDay = RTC_WEEKDAY_WEDNESDAY;
-    mgr_rtc_date.Month = RTC_MONTH_JANUARY;
-    mgr_rtc_date.Date = 22;
-    mgr_rtc_date.Year = 20;
-    mgr_rtc_set(&mgr_rtc_time, &mgr_rtc_date);
+    rtc_date.Month = RTC_MONTH_JANUARY;
+    rtc_date.Date = 22;
+    rtc_date.Year = 20;
+    mgr_rtc_set(&rtc_time, &rtc_date);
 #endif
 }
 

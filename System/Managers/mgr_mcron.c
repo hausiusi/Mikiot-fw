@@ -5,6 +5,7 @@
  *      Author: Zviad
  */
 #include <string.h>
+#include <stdlib.h>
 #include <inttypes.h>
 #include "error.h"
 #include "lib_linked_list.h"
@@ -57,11 +58,24 @@ void mgr_mcron_init() {
 }
 
 void mgr_mcron_next_target_set(mcron_item_t* mcron_item) {
-#if (MCONF_RTC_ON == 1)
-    rtc_date_t* date = mgr_rtc_get_date();
-    rtc_time_t* time = mgr_rtc_get_time();
-#endif
     uint32_t ticks_now = mw_timebase_ticks_get();
+#if (MCONF_RTC_ON == 1)
+    rtc_date_t date = { 0 };
+    rtc_time_t time = { 0 };
+    static uint32_t ticks_rtc_check = 0;
+    if (mcron_item->variant == McronTaskVariantHourly
+            || mcron_item->variant == McronTaskVariantDaily
+            || mcron_item->variant == McronTaskVariantWeekly
+            || mcron_item->variant == McronTaskVariantMonthly
+            || mcron_item->variant == McronTaskVariantYearly
+            || mcron_item->variant == McronTaskVariantOnceOnDate) {
+        if (abs(ticks_rtc_check - ticks_now) > 999) {
+            mgr_rtc_get_date(&date);
+            mgr_rtc_get_time(&time);
+            ticks_rtc_check = ticks_now;
+        }
+    }
+#endif
     switch (mcron_item->variant) {
     case McronTaskVariantPeriodic:
     case McronTaskVariantDelayed:
@@ -71,20 +85,20 @@ void mgr_mcron_next_target_set(mcron_item_t* mcron_item) {
         break;
 #if (MCONF_RTC_ON == 1)
     case McronTaskVariantHourly:
-        mcron_item->target.exec_date.hour = _next_hour(time);
+        mcron_item->target.exec_date.hour = _next_hour(&time);
         break;
     case McronTaskVariantDaily:
-        mcron_item->target.exec_date.day = _next_day(date);
+        mcron_item->target.exec_date.day = _next_day(&date);
         break;
     case McronTaskVariantWeekly:
-        mcron_item->target.exec_date.day = _next_weekday_date(date,
+        mcron_item->target.exec_date.day = _next_weekday_date(&date,
                 mcron_item->setup.exec_date.weekday);
         break;
     case McronTaskVariantMonthly:
-        mcron_item->target.exec_date.month = _next_month(date);
+        mcron_item->target.exec_date.month = _next_month(&date);
         break;
     case McronTaskVariantYearly:
-        mcron_item->target.exec_date.year = _next_year(date);
+        mcron_item->target.exec_date.year = _next_year(&date);
         break;
     case McronTaskVariantOnceOnDate:
         memcpy(&mcron_item->target, &mcron_item->setup, sizeof(mcron_time_t));
@@ -95,26 +109,40 @@ void mgr_mcron_next_target_set(mcron_item_t* mcron_item) {
 
 void mgr_mcron_check_execute(ll_node_t* node) {
     mcron_item_t* mcron_item = (mcron_item_t*) node->item;
-    uint32_t timebase_ticks = mw_timebase_ticks_get();
+    uint32_t ticks_now = mw_timebase_ticks_get();
 #if (MCONF_RTC_ON == 1)
-    rtc_date_t* date = mgr_rtc_get_date();
-    rtc_time_t* time = mgr_rtc_get_time();
+    rtc_date_t date = { 0 };
+    rtc_time_t time = { 0 };
+    static uint32_t ticks_rtc_check = 0;
+    /* There is no sense to check RTC and related tasks more frequently than once a second */
+    if (mcron_item->variant == McronTaskVariantHourly
+            || mcron_item->variant == McronTaskVariantDaily
+            || mcron_item->variant == McronTaskVariantWeekly
+            || mcron_item->variant == McronTaskVariantMonthly
+            || mcron_item->variant == McronTaskVariantYearly
+            || mcron_item->variant == McronTaskVariantOnceOnDate) {
+        if (abs(ticks_rtc_check - ticks_now) > 999) {
+            mgr_rtc_get_date(&date);
+            mgr_rtc_get_time(&time);
+            ticks_rtc_check = ticks_now;
+        }
+    }
 #endif
     switch (mcron_item->variant) {
     case McronTaskVariantPeriodic:
-        if (mcron_item->target.ticks.value <= timebase_ticks) {
+        if (mcron_item->target.ticks.value <= ticks_now) {
             _execute_mcron_function(mcron_item);
             mgr_mcron_next_target_set(mcron_item);
         }
         break;
     case McronTaskVariantDelayed:
-        if (mcron_item->target.ticks.value <= timebase_ticks) {
+        if (mcron_item->target.ticks.value <= ticks_now) {
             _execute_mcron_function(mcron_item);
             mgr_mcron_remove(node);
         }
         break;
     case McronTaskVariantPeriodicLimited:
-        if (mcron_item->target.ticks.value <= timebase_ticks) {
+        if (mcron_item->target.ticks.value <= ticks_now) {
             _execute_mcron_function(mcron_item);
             if (!--mcron_item->target.ticks.exec_count) {
                 mgr_mcron_remove(node);
@@ -125,27 +153,26 @@ void mgr_mcron_check_execute(ll_node_t* node) {
         break;
 #if (MCONF_RTC_ON == 1)
     case McronTaskVariantHourly:
-        if (mcron_item->target.exec_date.hour == time->Hours) {
+        if (mcron_item->target.exec_date.hour == time.Hours) {
             _execute_mcron_function(mcron_item);
             mgr_mcron_next_target_set(mcron_item);
         }
         break;
     case McronTaskVariantDaily:
-        if (mcron_item->target.exec_date.day == date->Date) {
+        if (mcron_item->target.exec_date.day == date.Date) {
             _execute_mcron_function(mcron_item);
             mgr_mcron_next_target_set(mcron_item);
         }
         break;
     case McronTaskVariantWeekly:
-        if ((mcron_item->target.exec_date.day == date->Date)
-                && (mcron_item->target.exec_date.weekday
-                        == mgr_rtc_get_date()->WeekDay)) {
+        if ((mcron_item->target.exec_date.day == date.Date)
+                && (mcron_item->target.exec_date.weekday == date.WeekDay)) {
             _execute_mcron_function(mcron_item);
             mgr_mcron_next_target_set(mcron_item);
         }
         break;
     case McronTaskVariantMonthly:
-        if (mcron_item->target.exec_date.month == date->Month) {
+        if (mcron_item->target.exec_date.month == date.Month) {
             if (mcron_item->fn) {
                 mcron_item->fn(mcron_item->args);
             }
@@ -153,21 +180,20 @@ void mgr_mcron_check_execute(ll_node_t* node) {
         }
         break;
     case McronTaskVariantYearly:
-        if (mcron_item->target.exec_date.year == date->Year) {
+        if (mcron_item->target.exec_date.year == date.Year) {
             if (mcron_item->fn) {
                 mcron_item->fn(mcron_item->args);
             }
             mgr_mcron_next_target_set(mcron_item);
         }
         break;
-
     case McronTaskVariantOnceOnDate:
-        if ((mcron_item->target.exec_date.second == time->Seconds)
-                && (mcron_item->target.exec_date.minute == time->Minutes)
-                && (mcron_item->target.exec_date.hour == time->Hours)
-                && (mcron_item->target.exec_date.day == date->Date)
-                && (mcron_item->target.exec_date.month == date->Month)
-                && (mcron_item->target.exec_date.year == date->Year)) {
+        if ((mcron_item->target.exec_date.second == time.Seconds)
+                && (mcron_item->target.exec_date.minute == time.Minutes)
+                && (mcron_item->target.exec_date.hour == time.Hours)
+                && (mcron_item->target.exec_date.day == date.Date)
+                && (mcron_item->target.exec_date.month == date.Month)
+                && (mcron_item->target.exec_date.year == date.Year)) {
             if (mcron_item->fn) {
                 mcron_item->fn(mcron_item->args);
             }
@@ -278,28 +304,30 @@ void mgr_mcron_item_info_print(mcron_item_t* mcron_item) {
         break;
     case McronTaskVariantHourly:
         debug_p("every hour. (next at %i:00)\n",
-                mcron_item->setup.exec_date.hour);
+                mcron_item->target.exec_date.hour);
         break;
     case McronTaskVariantDaily:
-        debug_p("every day. (next on %i)\n", mcron_item->setup.exec_date.day);
+        debug_p("every day. (next on %i)\n", mcron_item->target.exec_date.day);
         break;
     case McronTaskVariantWeekly:
-        debug_p("every week. (next on %i)\n", mcron_item->setup.exec_date.day);
+        debug_p("every week. (next on %i)\n", mcron_item->target.exec_date.day);
         break;
     case McronTaskVariantMonthly:
         debug_p("every month. (next in %i)\n",
-                mcron_item->setup.exec_date.month);
+                mcron_item->target.exec_date.month);
         break;
     case McronTaskVariantYearly:
-        debug_p("every year. (next in %i)\n", mcron_item->setup.exec_date.year);
+        debug_p("every year. (next in %i)\n",
+                mcron_item->target.exec_date.year);
         break;
     case McronTaskVariantOnceOnDate:
-        debug_p("once on %i.%i.%i %i:%i:%i)\n", mcron_item->setup.exec_date.day,
-                mcron_item->setup.exec_date.month,
-                mcron_item->setup.exec_date.year,
-                mcron_item->setup.exec_date.hour,
-                mcron_item->setup.exec_date.minute,
-                mcron_item->setup.exec_date.second);
+        debug_p("once on %i.%i.%i %i:%i:%i)\n",
+                mcron_item->target.exec_date.day,
+                mcron_item->target.exec_date.month,
+                mcron_item->target.exec_date.year,
+                mcron_item->target.exec_date.hour,
+                mcron_item->target.exec_date.minute,
+                mcron_item->target.exec_date.second);
         break;
     }
     debug_p(" Function:  at %p\n", mcron_item->fn);

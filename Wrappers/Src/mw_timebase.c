@@ -38,3 +38,7 @@ void TIM1_BRK_TIM9_IRQHandler() {
     basetime_ticks++;
     HAL_TIM_IRQHandler(&base_tim);
 }
+
+uint32_t HAL_GetTick(void) {
+    return mw_timebase_ticks_get();
+}

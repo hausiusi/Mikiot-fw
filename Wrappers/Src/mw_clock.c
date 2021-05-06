@@ -61,7 +61,7 @@ void mw_external_clock_init(uint32_t clock_mhz) {
     }
     RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
     RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
-#if (RTC_ON == 1)
+#if (MCONF_RTC_ON == 1)
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
 #endif
 
@@ -72,12 +72,12 @@ void mw_external_clock_init(uint32_t clock_mhz) {
     /** Initializes the CPU, AHB and APB busses clocks
      */
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE
-#if (RTC_ON == 1)
+#if (MCONF_RTC_ON == 1)
             | RCC_OSCILLATORTYPE_LSE
 #endif
             ;
     RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-#if (RTC_ON == 1)
+#if (MCONF_RTC_ON == 1)
     RCC_OscInitStruct.LSEState = RCC_LSE_ON;
 #endif
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -105,7 +105,7 @@ void mw_external_clock_init(uint32_t clock_mhz) {
             asm ("NOP");
         }
     }
-#if (RTC_ON == 1)
+#if (MCONF_RTC_ON == 1)
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_I2S
             | RCC_PERIPHCLK_RTC;
     PeriphClkInitStruct.PLLI2S.PLLI2SN = 200;
