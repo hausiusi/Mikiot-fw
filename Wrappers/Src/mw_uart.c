@@ -139,6 +139,59 @@ static uart_dma_conf_t uart_dma_configs[] = {
 		.rx_data.max_length = UART2_DMA_RX_BUFFER_SIZE,
 		.tx_data.max_length = UART2_DMA_TX_BUFFER_SIZE,
 	},
+	{
+        .uart.Instance = USART6,
+        .uart.Init.BaudRate = 115200,
+        .uart.Init.StopBits = UART_STOPBITS_1,
+        .uart.Init.WordLength = UART_WORDLENGTH_8B,
+        .uart.Init.Mode = UART_MODE_TX_RX,
+        .uart.Init.Parity = UART_PARITY_NONE,
+        .uart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
+        .gpiox_tx.gpiox = UART6_TX_GPIO,
+        .gpiox_tx.init.Pin = UART6_TX_PIN,
+        .gpiox_tx.init.Alternate = GPIO_AF8_USART6,
+        .gpiox_tx.init.Mode = GPIO_MODE_AF_PP,
+        .gpiox_tx.init.Speed = GPIO_SPEED_HIGH,
+        .gpiox_tx.init.Pull = GPIO_PULLUP,
+        .gpiox_rx.gpiox = UART6_RX_GPIO,
+        .gpiox_rx.init.Pin = UART6_RX_PIN,
+        .gpiox_rx.init.Alternate = GPIO_AF8_USART6,
+        .gpiox_rx.init.Mode = GPIO_MODE_AF_PP,
+        .gpiox_rx.init.Speed = GPIO_SPEED_HIGH,
+        .gpiox_rx.init.Pull = GPIO_NOPULL,
+        .nvic_uart.irq = USART6_IRQn,
+        .nvic_uart.preempt_priority = 15,
+        .nvic_uart.sub_priority = 0,
+        .dma_rx.Instance = DMA2_Stream1,
+        .dma_rx.Init.Channel = DMA_CHANNEL_5,
+        .dma_rx.Init.Direction = DMA_PERIPH_TO_MEMORY,
+        .dma_rx.Init.PeriphInc = DMA_PINC_DISABLE,
+        .dma_rx.Init.MemInc = DMA_MINC_ENABLE,
+        .dma_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
+        .dma_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE,
+        .dma_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE,
+        .dma_rx.Init.Mode = DMA_CIRCULAR,
+        .nvic_dma_rx.irq = DMA2_Stream1_IRQn,
+        .nvic_dma_rx.preempt_priority = 15,
+        .nvic_dma_rx.sub_priority = 0,
+        .dma_tx.Instance = DMA2_Stream6,
+        .dma_tx.Init.Channel = DMA_CHANNEL_5,
+        .dma_tx.Init.Direction = DMA_MEMORY_TO_PERIPH,
+        .dma_tx.Init.PeriphInc = DMA_PINC_DISABLE,
+        .dma_tx.Init.MemInc = DMA_MINC_ENABLE,
+        .dma_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
+        .dma_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE,
+        .dma_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE,
+        .dma_tx.Init.Mode = DMA_NORMAL,
+        .nvic_dma_tx.irq = DMA2_Stream6_IRQn,
+        .nvic_dma_tx.preempt_priority = 15,
+        .nvic_dma_tx.sub_priority = 0,
+        .busy_tx = &uart2_tx_busy_buff,
+        .rx_data.buffer = uart2_rx_dma_buff,
+        .tx_data.buffer = uart2_tx_dma_buff,
+        .rx_data.max_length = UART2_DMA_RX_BUFFER_SIZE,
+        .tx_data.max_length = UART2_DMA_TX_BUFFER_SIZE,
+	},
 };
 /* @formatter:on */
 
@@ -292,6 +345,22 @@ void USART2_IRQHandler() {
     HAL_UART_IRQHandler(&conf->uart);
 }
 
+void USART6_IRQHandler() {
+    uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart6ConfigIndex);
+    if (__HAL_UART_GET_FLAG(&conf->uart, USART_FLAG_IDLE) == SET) {
+        __HAL_UART_CLEAR_IDLEFLAG(&conf->uart);
+        if (conf->rec_data_process) {
+            conf->rx_data.allocated_length = conf->rx_data.max_length
+                    - conf->dma_rx.Instance->NDTR;
+            conf->rec_data_process(&conf->rx_data);
+            HAL_UART_DMAStop(&conf->uart);
+            HAL_UART_Receive_DMA(&conf->uart, conf->rx_data.buffer,
+                    conf->rx_data.max_length);
+        }
+    }
+    HAL_UART_IRQHandler(&conf->uart);
+}
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart) {
     uart_dma_conf_t* conf = _uart_get_config(huart);
     lib_busy_buffer_release(conf->busy_tx);
@@ -317,6 +386,17 @@ void DMA1_Stream5_IRQHandler() {
 
 void DMA1_Stream6_IRQHandler() {
     uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart2ConfigIndex);
+    HAL_DMA_IRQHandler(&conf->dma_tx);
+}
+
+// UART6 DMA handlers
+void DMA2_Stream1_IRQHandler() {
+    uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart6ConfigIndex);
+    HAL_DMA_IRQHandler(&conf->dma_rx);
+}
+
+void DMA2_Stream6_IRQHandler() {
+    uart_dma_conf_t* conf = mw_uart_dma_get_config(Uart6ConfigIndex);
     HAL_DMA_IRQHandler(&conf->dma_tx);
 }
 
