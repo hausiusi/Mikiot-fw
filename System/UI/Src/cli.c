@@ -20,6 +20,7 @@
 #include "mgr_rtc.h"
 #include "mgr_tasks.h"
 #include "mgr_mcron.h"
+#include "mgr_version.h"
 #include "os_loader.h"
 #include "performance.h"
 #include "utils.h"
@@ -77,9 +78,17 @@ static void _help(void* args) {
 }
 
 static void _version(void* args) {
-    debug_p("Version: %i.%i.%i\nCode name: %s\nRelease date: %s\n",
-            VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_CODE_NAME,
-            VERSION_RELEASE_DATE);
+    mikiot_versions_t* versions = mgr_versions_get();
+    debug_p("Mikiot firmware\n");
+    debug_p(" FW version      : %i.%i.%i\n", versions->fw_version.main,
+            versions->fw_version.sub1, versions->fw_version.sub2);
+    debug_p(" Code name       : %s\n", versions->fw_code_name);
+    debug_p(" Release date    : %s\n", versions->fw_release_date);
+    debug_p(" FreeRTOS vesion : %i.%i.%i\n", versions->rtos_version.main,
+            versions->rtos_version.sub1, versions->rtos_version.sub2);
+    debug_p(" HAL version     : %i.%i.%i.%i\n", versions->hal_version.main,
+            versions->hal_version.sub1, versions->hal_version.sub2,
+            versions->hal_version.sub3);
 }
 
 static void _play_blob(void* args) {

@@ -17,5 +17,6 @@
 #define is_between(x, a, b) (((x) > (a)) && ((x) < (b))) // Checks if x is more than a and less than b
 #define is_range(x, a, b) (((x) >= (a)) && ((x) <= (b))) // Checks if x is more or equal a and less or equal than b
 #define bcd2bin_8b(bcd)  (((bcd & 0xF0) >> 4) + (bcd & 0x0F))
+#define allign_8bits_in32(a, b, c, d) ((a << 24U) |(b << 16U) |(c << 8U )|(d))
 
 #endif /* INC_MACRODEFS_H_ */
