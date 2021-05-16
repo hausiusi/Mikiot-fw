@@ -23,6 +23,7 @@ typedef enum task_index {
     AdcHandler,
     GprsHandler,
     McronHandler,
+    AppLinkHandler,
 }task_index_enum_t;
 
 /* @formatter:on */

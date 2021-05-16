@@ -47,6 +47,9 @@
 /* Size of debug buffer array depends on corresponding UART buffer size */
 #define MCONF_DEBUG_BUFFER_SIZE           MCONF_UART1_DMA_TX_BUFFER_SIZE
 
+/* Size of applink buffer array depends on corresponding UART buffer size */
+#define MCONF_APPLINK_BUFFER_SIZE         MCONF_UART6_DMA_TX_BUFFER_SIZE
+
 char tf_debug_array[MCONF_DEBUG_BUFFER_SIZE];
 
 #if (COMPILE_WITH_UNIT_TESTS == 1)

@@ -7,9 +7,9 @@
 
 #include <inttypes.h>
 #include <limits.h>
-#include <mw_uart.h>
 #include <string.h>
 #include "cli.h"
+#include "mw_uart.h"
 #include "os_loader.h"
 #include "FreeRTOS.h"
 #include "task.h"

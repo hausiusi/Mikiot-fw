@@ -19,6 +19,7 @@
 #define mw_gpio_togglepin              HAL_GPIO_TogglePin
 #define mw_gpio_exti_callback          HAL_GPIO_EXTI_Callback
 #define mw_tim_period_elapsed_callback HAL_TIM_PeriodElapsedCallback
+#define mw_hal_version                 HAL_GetHalVersion
 
 /* RTC typedef section*/
 typedef RTC_HandleTypeDef rtc_handle_t;

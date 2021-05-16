@@ -35,4 +35,9 @@
 #define UART2_RX_GPIO           GPIOD
 #define UART2_RX_PIN            GPIO_PIN_6
 
+#define UART6_TX_GPIO           GPIOC
+#define UART6_TX_PIN            GPIO_PIN_6
+#define UART6_RX_GPIO           GPIOC
+#define UART6_RX_PIN            GPIO_PIN_7
+
 #endif /* INC_IOCONFIG_H_ */

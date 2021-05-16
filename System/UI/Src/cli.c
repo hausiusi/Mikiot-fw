@@ -471,10 +471,6 @@ static void _create(void* args) {
     }
 }
 
-void mcron_test(void* args) {
-    debug_p("MCRON called the function!\n");
-}
-
 static void _mcron(void* args) {
     char* token = NULL;
     char* rest = args;
