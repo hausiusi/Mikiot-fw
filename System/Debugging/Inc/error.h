@@ -27,6 +27,7 @@ typedef enum {
 	UartError = 8,
 	HeapError = 9,
 	LibError = 10,
+	MemAccesError = 11,
 } error_enum_t;
 // @formatter:on
 typedef struct {

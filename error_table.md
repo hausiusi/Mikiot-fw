@@ -16,7 +16,7 @@ Error table
 | 010 |BlobProcessorError|BLOB funcion pointer couldn't find (is NULL)                                                       |
 | 011 |BlobProcessorError|Jump requires 16 bit long argument for delay. The length or arguments must be exactly 2 bytes long |
 | 012 |BlobProcessorError|Print function checks if provided string has terminator, by checking if arglength - 1 index is null|
-| 013 |BlobProcessorError|snilfe operator requires arguments length to be 4 bytes long (the same as function exit code       |
+| 013 |BlobProcessorError|snilfe operator requires arguments length to be 4 bytes long (the same as function exit code)      |
 | 014 |BlobProcessorError|If operator requires 10 bytes long arguments                                                       |
 | 015 |AdcError          |ADC initialization failed                                                                          |
 | 016 |AdcError          |ADC channel configuration failed                                                                   |
@@ -30,3 +30,6 @@ Error table
 | 024 |HeapError         |Couldn't allocate enough space for linked list iterator item                                       |
 | 025 |LibError          |Iterator argument must be not NULL                                                                 |
 | 026 |HeapError         |Couldn't allocate heap for mcron arguments                                                         |
+| 027 |MemAccesError     |Task manager can not print system load (task id is too large)                                      |
+| 028 |MemAccesError     |Task manager can not print system load (task name is too long)                                     |
+| 029 |MemAccesError     |Task manager can not print system load (task load is represented as long string)                   |

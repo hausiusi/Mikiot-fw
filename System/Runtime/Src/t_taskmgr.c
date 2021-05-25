@@ -53,6 +53,8 @@ void _system_load_print(TaskStatus_t* const tasks_statuses_current,
         }
     }
     float task_load = 0;
+    uint32_t len = 0;
+    static char spaces0[4];
     static char spaces1[15];
     static char spaces2[4];
     float total_runtime = 0;
@@ -64,19 +66,36 @@ void _system_load_print(TaskStatus_t* const tasks_statuses_current,
     if (total_runtime == 0) {
         return;
     }
-    debug_p("Name             Load       WM\n");
-    debug_p("------------------------------\n");
+    debug_p("ID    Name             Load       WM\n");
+    debug_p("------------------------------------\n");
     for (int i = 0; i < tasks_count; i++) {
 
         task_load = (tasks_statuses_prev[i].ulRunTimeCounter / total_runtime);
+        memset(spaces0, 0, sizeof(spaces0));
+        len = unumlen(tasks_statuses_prev[i].xTaskNumber);
+        if (len > sizeof(spaces0)) {
+            error_report(27, MemAccesError);
+            return;
+        }
+        memset(spaces0, 32, sizeof(spaces0) - len);
         memset(spaces1, 0, sizeof(spaces1));
-        memset(spaces1, 32,
-                sizeof(spaces1) - strlen(tasks_statuses_prev[i].pcTaskName));
+        len = strlen(tasks_statuses_prev[i].pcTaskName);
+        if (len > sizeof(spaces1)) {
+            error_report(28, MemAccesError);
+            return;
+        }
+        memset(spaces1, 32, sizeof(spaces1) - len);
         memset(spaces2, 0, sizeof(spaces2));
-        memset(spaces2, 32, sizeof(spaces2) - unumlen(task_load));
-        debug_p("%s %s %f %s %u\n", tasks_statuses_prev[i].pcTaskName, spaces1,
-                task_load, spaces2,
-                tasks_statuses_prev[i].usStackHighWaterMark); //TODO: This line will delay watermark (shows current in next). Use find by task id and print from current statuses
+        len = unumlen(task_load);
+        if (len > sizeof(spaces1)) {
+            error_report(29, MemAccesError);
+            return;
+        }
+
+        memset(spaces2, 32, sizeof(spaces2) - len);
+        debug_p("%u %s %s %s %f %s %u\n", tasks_statuses_prev[i].xTaskNumber,
+                spaces0, tasks_statuses_prev[i].pcTaskName, spaces1, task_load,
+                spaces2, tasks_statuses_prev[i].usStackHighWaterMark); //TODO: This line will delay watermark (shows current in next). Use find by task id and print from current statuses
     }
     debug_p("\n");
 }
