@@ -22,6 +22,7 @@ extern void thread_overal_state_monitor(void* args) {
     rtc_date_t rtc_date;
     uint32_t seconds_tmp = 0, subseconds_tmp = 0;
     overall_state.base_ticks = mw_timebase_ticks_get();
+    overal_state_init();
     for (;;) {
         // base_time is ok if base_ticks are changing (increasing)
         overall_state.base_time_ok = overall_state.base_ticks
