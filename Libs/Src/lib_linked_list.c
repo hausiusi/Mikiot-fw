@@ -89,7 +89,7 @@ ll_node_t* ll_find(linked_list_t* ll, void* item) {
     foreach(ll_node_t, node, ll) {
         if (ll->equals) {
             if (ll->equals(node->item, item)) {
-                return node;
+                return_from_foreach(node);
             }
         }
     }

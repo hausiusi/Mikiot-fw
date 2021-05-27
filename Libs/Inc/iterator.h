@@ -20,4 +20,6 @@ typedef struct _iterator {
                                                             iterator_t* __iterator = iterable_ptr->get_iterator(iterable_ptr); \
                                                             for (item_decl_name = (item_type*)__iterator->first; item_decl_name != NULL ? 1 : __iterator->free(__iterator); item_decl_name = (item_type*)__iterator->next(__iterator))
 
+#define return_from_foreach(ret)                            __iterator->free(__iterator); return ret;
+
 #endif /* INC_ITERATOR_H_ */
