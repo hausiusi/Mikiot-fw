@@ -39,6 +39,7 @@ static void _gprs(void* args);
 static void _kill(void* args);
 static void _create(void* args);
 static void _mcron(void* args);
+static void _repeat(void* args);
 static void _perfinfo(void* args);
 static void _dbglevel(void* args);
 static void _version(void* args);
@@ -60,6 +61,7 @@ static cmd_struct_t commands[] = {
 	{ "kill", _kill, "Kills the provided task by its name" },
 	{ "create", _create, "Creates the task by provided name and parameters" },
 	{ "mcron", _mcron, "Creates the Mikiot cron task" },
+	{ "repeat", _repeat, "Repeats the provided task by its name"},
 	{ "perfinfo", _perfinfo, "Gets the information about current performance" },
 	{ "debuglevel", _dbglevel, "Gets or sets debug level" },
 	{ "version", _version, "Prints current version" },
@@ -609,6 +611,56 @@ static void _mcron(void* args) {
             "    add    - adds the new mcron task, is followed by: `variant`, `timebase` and `cmd` arguments\n");
     debug_p("    remove - removes the existing mcron task\n");
     debug_p("    list   - lists all mcron task\n");
+}
+
+static void _repeat(void* args) {
+    char* token = NULL;
+    char* rest = args;
+    uint32_t len = 0;
+    char* cmd = NULL;
+    int32_t amount = 0;
+    int32_t delay = 1000;
+    int arg_counter = 0;
+    while (token = strtok_r(rest, " ", &rest), token != NULL) {
+        if (!strncmp(token, "amount", 6)) {
+            token = strtok_r(rest, " ", &rest);
+            if (!is_integer(token)) {
+                debug_error("argument amount must be followed by the number\n");
+                return;
+            }
+            amount = atoi(token);
+        } else if (!strncmp(token, "delay", 5)) {
+            token = strtok_r(rest, " ", &rest);
+            if (!is_integer(token)) {
+                debug_error("argument delay must be followed by the number\n");
+                return;
+            }
+            delay = atoi(token);
+        } else if (!strncmp(token, "cmd", 3)) {
+            len = strlen((char*) rest) + 1;
+            cmd = mconf_malloc(len);
+            if (cmd == NULL) {
+                debug_error("Can not allocate %i bytes for repeat buffer\n",
+                        len);
+                return;
+            }
+            memset(cmd, 0, len);
+            memcpy(cmd, rest, len - 1);
+            debug_p("Repeating cmd  : '%s'\n", cmd);
+            for (int i = 0; i < amount; i++) {
+                cli_cmd_process(cmd);
+                mconf_delay(delay);
+            }
+            arg_counter++;
+        }
+    }
+    if (!arg_counter) {
+        debug_p("The repeat command requires arguments:\n");
+        debug_p("    amount   - amount of repeats\n");
+        debug_p("    delay    - delay between repeats\n");
+        debug_p("    cmd      - cmd to execute n times\n");
+        debug_p("Usage: repeat amount 10 delay 1000 cmd echo test\n");
+    }
 }
 
 static void _dbglevel(void* args) {

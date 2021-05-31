@@ -64,4 +64,7 @@ char tf_debug_array[MCONF_DEBUG_BUFFER_SIZE];
 #define mconf_malloc                      pvPortMalloc
 #define mconf_free                        vPortFree
 
+/* Common commands */
+#define mconf_delay(x)                    vTaskDelay(x)
+
 #endif /* INC_MIKIOT_CONFIG_H_ */
