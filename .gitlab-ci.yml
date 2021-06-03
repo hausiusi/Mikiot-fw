@@ -31,4 +31,4 @@ test:
 deploy:
   stage: deploy
   script:
-    - echo "Deplyment"
+    - echo "Deployment"
