@@ -30,6 +30,10 @@ Describes the hardware which is used what for
         - **IO:** Tx - GPIOD5, Rx - GPIOD6 
         - **Purpose:** GPRS serial communication interface
         - **Speed:** variable (default: 57600)
+    - **UART6**
+        - **IO:** Tx - GPIOC6, Rx - GPIOC7 
+        - **Purpose:** Applink interface
+        - **Speed:** variable (default: 115200)        
 
 ## RTC<div id="rtc"/>
 - [Integrated RTC](./Wrappers/Src/mw_rtc.c)
