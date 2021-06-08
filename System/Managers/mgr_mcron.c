@@ -218,19 +218,22 @@ bool_t mgr_mcron_add(mcron_item_t* mcron_item) {
 
 bool_t mgr_mcron_remove_by_item_id(mcron_item_t* item) {
     ll_node_t* node = ll_find(mcron_tasks, item);
-    return mgr_mcron_remove(node);
+    bool_t success = node != NULL;
+    if (success) {
+        success = mgr_mcron_remove(node);
+    }
+    if (success) {
+        debug_info("Mcron item (id=%i) removed successfully\n", item->id);
+    } else {
+        debug_error("Mcron item (id=%i) coudln't be removed\n", item->id);
+    }
+    return success;
 }
 
 bool_t mgr_mcron_remove(ll_node_t* node) {
     mcron_item_t* mcron_item = node->item;
     mgr_mcron_free_args(mcron_item);
-    uint32_t id = mcron_item->id;
-    if (!ll_remove(mcron_tasks, node)) {
-        debug_error("Mcron item (id=%i) coudln't be removed\n", id);
-        return false;
-    }
-    debug_info("Mcron item (id=%i) removed successfully\n", id);
-    return true;
+    return ll_remove(mcron_tasks, node);
 }
 
 bool_t mgr_mcron_deep_copy_args(mcron_item_t* mcron_item, void* args,
