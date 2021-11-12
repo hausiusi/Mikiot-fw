@@ -738,9 +738,15 @@ static void _perfinfo(void* args) {
 
 void cli_cmd_process(void* input) {
     for (int i = 0; i < array_count(commands); i++) {
-        if (!strncmp(commands[i].cmd, (char*) input,
-                strlen((char*) commands[i].cmd))) {
-            commands[i].fp(input + strlen(commands[i].cmd) + 1);
+        size_t cmd_len = strlen((char*) commands[i].cmd);
+        if (!strncmp(commands[i].cmd, (char*) input, cmd_len)) {
+            char* args = input + cmd_len;
+            if (isspace(0xFF & *args)) {
+                while (isspace(0xFF & *args)) {
+                    args++;
+                };
+            }
+            commands[i].fp(args);
             return;
         }
     }
