@@ -13,6 +13,8 @@
 
 typedef void (*at_func_t)(void*);
 
+mgr_gprs_status_t mgr_gprs_status;
+
 typedef struct {
     char* at;
     at_func_t fp;

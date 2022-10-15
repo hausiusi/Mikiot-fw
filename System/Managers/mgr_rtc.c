@@ -10,6 +10,8 @@
 #include "macrodefs.h"
 #include "math.h"
 
+rtc_handle_t mgr_rtc_handle;
+
 static void _set_week_day(rtc_date_t* date);
 
 void mgr_rtc_init(uint32_t hour_format) {

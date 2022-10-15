@@ -10,6 +10,9 @@
 #include <string.h>
 #include "error.h"
 
+uint8_t mock_ereports[MOCK_EREPORTS_COUNT][2];
+uint8_t mock_ereport_index;
+
 static ll_iterator_t* _get_iterator(linked_list_t* ll);
 static ll_node_t* _iterator_next(ll_iterator_t* it);
 

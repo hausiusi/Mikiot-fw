@@ -22,7 +22,7 @@ typedef struct {
     uint32_t elapsed;
 } tf_result;
 
-tf_result tf_current_results, tf_total_results;
+extern tf_result tf_current_results, tf_total_results;
 
 #include "mw_uart.h"
 #define tf_write(frmt, vargs...)                                            \

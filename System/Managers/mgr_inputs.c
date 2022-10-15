@@ -12,6 +12,8 @@
 #include "mgr_inputs.h"
 #include "mw_io.h"
 
+tim_handle_t htim11;
+
 static void (*_input_detected_fp)(input_t*);
 
 static void _tim_init(uint32_t period);

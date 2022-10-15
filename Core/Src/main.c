@@ -8,6 +8,8 @@
  * @retval int
  */
 
+int debug_level;
+
 int main(void) {
     debug_level = DBG_INFO;
     mw_init();

@@ -9,11 +9,11 @@
 #include "defines.h"
 #include "error.h"
 
-bfp_array_t bp_actions;
-bfp_array_t bp_operators;
-bfp_array_t bp_inits;
-bfp_array_t bp_inouts;
-bfp_array_t bp_params;
+extern bfp_array_t bp_actions;
+extern bfp_array_t bp_operators;
+extern bfp_array_t bp_inits;
+extern bfp_array_t bp_inouts;
+extern bfp_array_t bp_params;
 
 static bool_t groups_initialized = false;
 

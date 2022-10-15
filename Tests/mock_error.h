@@ -12,8 +12,8 @@
 
 #define MOCK_EREPORTS_COUNT 30
 
-uint8_t mock_ereports[MOCK_EREPORTS_COUNT][2];
-uint8_t mock_ereport_index;
+extern uint8_t mock_ereports[MOCK_EREPORTS_COUNT][2];
+extern uint8_t mock_ereport_index;
 
 void mock_error_limits_check();
 

@@ -10,8 +10,6 @@
 
 #include "mw_io.h"
 
-tim_handle_t htim11;
-
 typedef enum {
     InputIdleStateLow = 0, /* Input low idle state. Triggers when the low-high transition happens */
     InputIdleStateHigh = 1 /* Input high idle state. Triggers when the high-low transition happens */

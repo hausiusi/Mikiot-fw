@@ -19,7 +19,7 @@
 #include "macrodefs.h"
 
 /* @formatter:off */
-enum {
+typedef enum {
 	AllowsOverlap,
 	WritePointerReachedReadPointer,
 	Overlapped, // Shows the condition, if ringbuffer was overlapped after last read, after reading and crossing write position mark, this flag will be removed

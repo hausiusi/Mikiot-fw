@@ -15,6 +15,10 @@
 #include "debug.h"
 #include "macrodefs.h"
 
+#if COMPILE_WITH_UNIT_TESTS == 1
+char tf_debug_array[MCONF_DEBUG_BUFFER_SIZE];
+#endif
+
 typedef struct {
     char* fmt;
     void (*fn)(char** buff_ptr, va_list* ap);

@@ -50,7 +50,7 @@
 /* Size of applink buffer array depends on corresponding UART buffer size */
 #define MCONF_APPLINK_BUFFER_SIZE         MCONF_UART6_DMA_TX_BUFFER_SIZE
 
-char tf_debug_array[MCONF_DEBUG_BUFFER_SIZE];
+extern char tf_debug_array[MCONF_DEBUG_BUFFER_SIZE];
 
 #if (COMPILE_WITH_UNIT_TESTS == 1)
 #define mikiot_error_report(id, type)     (mock_error_report(id, type))

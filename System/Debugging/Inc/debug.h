@@ -26,7 +26,7 @@
 #define DEBUG_ON                    1
 #define DEBUG_BUFFER_SIZE           MCONF_DEBUG_BUFFER_SIZE
 
-int debug_level;
+extern int debug_level;
 
 // TODO: implement this idea, keep traces in ringbuffer and print them
 void put_trace_text(char* ch);

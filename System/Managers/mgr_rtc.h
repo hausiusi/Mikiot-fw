@@ -17,8 +17,6 @@
                                                     return; }\
                                                     }
 
-rtc_handle_t mgr_rtc_handle;
-
 void mgr_rtc_init(uint32_t hour_format);
 
 void mgr_rtc_set(rtc_time_t* time, rtc_date_t* date);

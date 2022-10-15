@@ -13,6 +13,8 @@
 #include "bp_groups.h"
 #include "error.h"
 
+int bpf_exit_code;
+
 bool_t _verify(uint8_t* blob_bytes) {
     //TODO: will be implemented with ISSUE_39
     return true;

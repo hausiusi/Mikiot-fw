@@ -17,6 +17,11 @@
 #include "mgr_rtc.h"
 #include "error.h"
 
+#if COMPILE_WITH_UNIT_TESTS == 1
+#include "Tests/test_framework.h"
+tf_result tf_current_results, tf_total_results;
+#endif
+
 static void _rtc_init() {
 #if (MCONF_RTC_ON == 1)
     mgr_rtc_init(MCONF_RTC_TIME_FORMAT);

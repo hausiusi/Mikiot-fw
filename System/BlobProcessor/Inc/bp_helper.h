@@ -43,14 +43,14 @@ typedef enum {
 /* @formatter:on */
 
 /* Pointers to functions of different groups */
-bfp_array_t bp_actions;
-bfp_array_t bp_operators;
-bfp_array_t bp_inits;
-bfp_array_t bp_inouts;
-bfp_array_t bp_params;
+extern bfp_array_t bp_actions;
+extern bfp_array_t bp_operators;
+extern bfp_array_t bp_inits;
+extern bfp_array_t bp_inouts;
+extern bfp_array_t bp_params;
 
 /* The last blob processor function exit code */
-int bpf_exit_code;
+extern int bpf_exit_code;
 
 /* Group initializers */
 extern void bpt_actions_init();

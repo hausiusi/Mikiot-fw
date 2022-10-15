@@ -18,8 +18,6 @@ typedef struct {
     uint32_t ip;
 } mgr_gprs_status_t;
 
-mgr_gprs_status_t mgr_gprs_status;
-
 bool_t mgr_gprs_init(gprs_state_t* state, bool_t enable_debug);
 
 void mgr_gprs_process_output(gprs_state_t* state);
