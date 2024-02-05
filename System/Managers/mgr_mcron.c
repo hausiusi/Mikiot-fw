@@ -209,7 +209,7 @@ bool_t mgr_mcron_add(mcron_item_t* mcron_item) {
     mgr_mcron_next_target_set(mcron_item);
     ll_node_t* node = ll_get_node(mcron_item, sizeof(mcron_item_t));
     if (!ll_add(mcron_tasks, node)) {
-        debug_error("MCron periodic task add failed\n");
+        debug_error("MCron periodic task adding failed\n");
         return false;
     }
     debug_info("Mcron item (id=%i) added successfully\n", mcron_item->id);

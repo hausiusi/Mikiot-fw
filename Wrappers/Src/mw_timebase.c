@@ -13,6 +13,7 @@
 #define BASETIME_TIMER TIM9
 
 static uint32_t basetime_ticks;
+static uint64_t basetime_ticks_us;
 static TIM_HandleTypeDef base_tim;
 
 void mw_timebase_init(int frequency_hz) {
@@ -34,8 +35,13 @@ uint32_t mw_timebase_ticks_get() {
     return basetime_ticks;
 }
 
+uint64_t mw_timebase_ticks_get_us() {
+    return basetime_ticks_us + ((base_tim.Instance->CNT + 1) / 25);
+}
+
 void TIM1_BRK_TIM9_IRQHandler() {
     basetime_ticks++;
+    basetime_ticks_us += 1000;
     HAL_TIM_IRQHandler(&base_tim);
 }
 

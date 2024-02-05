@@ -28,6 +28,7 @@ extern void thread_cli(void* args) {
     mw_uart_dma_init(conf);
     debug_info("UART1 initialized BR: %i\n", conf->uart.Init.BaudRate);
     uint32_t notify_value = 0;
+
     for (;;) {
         xTaskNotifyWait( pdFALSE, /* Don't clear bits on entry. */
         ULONG_MAX, /* Clear all bits on exit. */

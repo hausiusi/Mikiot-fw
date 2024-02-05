@@ -19,6 +19,10 @@ Describes the hardware which is used what for
      - **IO:** N/A
      - **Purpose:** counts ticks for "basetime" with ms precision (32 bit variable)
      - **Speed:** 1000 interrupts per second
+- [TIM11] (./Managers/mgr_inputs.c)
+     - **IO:** N/A
+     - **Purpose:** counts ticks for input detection with ms precision
+     - **Speed:** 1000 interrupts per second
 
 ## UARTS<div id="uarts"/>
 - [UART1,2,6](./Wrappers/Src/mw_uart.c)

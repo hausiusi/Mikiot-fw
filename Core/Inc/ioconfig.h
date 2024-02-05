@@ -20,6 +20,24 @@
 #define BTN3_GPIO               GPIOB
 #define BTN3_GPIO_PIN           GPIO_PIN_2
 
+#define SIG1_GPIO               GPIOC
+#define SIG1_GPIO_PIN           GPIO_PIN_3
+
+#define SIG2_GPIO               GPIOC
+#define SIG2_GPIO_PIN           GPIO_PIN_4
+
+#define SIG3_GPIO               GPIOC
+#define SIG3_GPIO_PIN           GPIO_PIN_5
+
+#define SIG4_GPIO               GPIOC
+#define SIG4_GPIO_PIN           GPIO_PIN_6
+
+#define SIG5_GPIO               GPIOC
+#define SIG5_GPIO_PIN           GPIO_PIN_7
+
+#define SIG6_GPIO               GPIOC
+#define SIG6_GPIO_PIN           GPIO_PIN_8
+
 /* ADC */
 #define ADC1_IN1_GPIO           GPIOB
 #define ADC1_IN1_GPIO_PIN       GPIO_PIN_0

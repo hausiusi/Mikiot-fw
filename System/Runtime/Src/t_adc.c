@@ -56,6 +56,7 @@ extern void thread_adc(void* args) {
                 vTaskDelay(adc_uiconf->delay);
             }
         }
+
         vTaskDelay(10);
     }
 }

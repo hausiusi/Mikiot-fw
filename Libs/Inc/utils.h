@@ -29,4 +29,6 @@ void strtrim(const char* src, char* dest, uint32_t dest_max);
 
 bool_t strnullempty(const char* restrict str);
 
+uint8_t singlebitpos(uint16_t n);
+
 #endif /* INC_UTILS_H_ */

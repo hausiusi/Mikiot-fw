@@ -14,4 +14,6 @@ void mw_timebase_init(int frequency_hz);
 
 uint32_t mw_timebase_ticks_get();
 
+uint64_t mw_timebase_ticks_get_us();
+
 #endif /* INC_MW_TIMEBASE_H_ */

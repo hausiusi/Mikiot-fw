@@ -35,6 +35,7 @@ void thread_adc(void* args);
 void thread_gprs(void* args);
 void thread_mcron(void* args);
 void thread_applink(void* args);
+void thread_sigmgr(void* args);
 
 /* @formatter:off */
 
@@ -49,7 +50,8 @@ startup_task_t startup_tasks[] =
 		{.result = 0, .thread = thread_adc, .name = "ADC", .stack_depth = 128, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_gprs, .name = "GPRS", .stack_depth = 128, .parameters = NULL, .priority = 1},
 		{.result = 0, .thread = thread_mcron, .name = "MCRON", .stack_depth = 512, .parameters = NULL, .priority = 1},
-		{.result = 0, .thread = thread_applink, .name = "Applink", .stack_depth = 256, .parameters = NULL, .priority = 1}
+		{.result = 0, .thread = thread_applink, .name = "Applink", .stack_depth = 256, .parameters = NULL, .priority = 1},
+		{.result = 0, .thread = thread_sigmgr, .name = "Sigmgr", .stack_depth = 256, .parameters = NULL, .priority = 2},
 };
 
 static void _startup_tasks_create() {

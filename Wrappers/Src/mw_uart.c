@@ -364,7 +364,7 @@ void USART6_IRQHandler() {
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart) {
     uart_dma_conf_t* conf = _uart_get_config(huart);
     lib_busy_buffer_release(conf->busy_tx);
-    __HAL_DMA_DISABLE(&conf->dma_tx);
+    //__HAL_DMA_DISABLE(&conf->dma_tx);
 }
 
 // UART1 DMA handlers

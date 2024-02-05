@@ -33,3 +33,4 @@ Error table
 | 027 |MemAccesError     |Task manager can not print system load (task id is too large)                                      |
 | 028 |MemAccesError     |Task manager can not print system load (task name is too long)                                     |
 | 029 |MemAccesError     |Task manager can not print system load (task load is represented as long string)                   |
+| 030 |InitError         |Signal Timer10 initialization error                                                                |
