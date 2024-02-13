@@ -34,3 +34,6 @@ Error table
 | 028 |MemAccesError     |Task manager can not print system load (task name is too long)                                     |
 | 029 |MemAccesError     |Task manager can not print system load (task load is represented as long string)                   |
 | 030 |InitError         |Signal Timer10 initialization error                                                                |
+| 031 |InitError         |PWM Timer initialization error                                                                     |
+| 032 |InitError         |PWM Timer MasterConfigSynchronization failed                                                       |
+| 033 |InitError         |PWM channel configuration failed                                                                   |

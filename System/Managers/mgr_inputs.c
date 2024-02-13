@@ -32,6 +32,7 @@ input_t _inputs[] = {
 		.on_count = 0,
 		.off_count = 0,
 		.top_lvl = 25,
+		.use_interrupts = true,
 		.nvic.irq = EXTI0_IRQn,
 		.nvic.preempt_priority = 15,
 		.nvic.sub_priority = 15,
@@ -46,6 +47,7 @@ input_t _inputs[] = {
 		.on_count = 0,
 		.off_count = 0,
 		.top_lvl = 25,
+		.use_interrupts = true,
 		.nvic.irq = EXTI1_IRQn,
 		.nvic.preempt_priority = 15,
 		.nvic.sub_priority = 15,
@@ -60,6 +62,7 @@ input_t _inputs[] = {
 		.on_count = 0,
 		.off_count = 0,
 		.top_lvl = 25,
+		.use_interrupts = true,
 		.nvic.irq = EXTI2_IRQn,
 		.nvic.preempt_priority = 15,
 		.nvic.sub_priority = 15,
@@ -79,9 +82,13 @@ void mgr_inputs_init(uint32_t tim_period_us, void* fp) {
         gpio.init.Mode = _inputs[i].gpio.mode;
         gpio.init.Pull = _inputs[i].gpio.pull;
         mw_gpio_init(&gpio);
-        mw_gpio_nvic_init(_inputs[i].nvic.irq, _inputs[i].nvic.preempt_priority,
-                _inputs[i].nvic.sub_priority);
+        if (_inputs[i].use_interrupts) {
+            mw_gpio_nvic_init(_inputs[i].nvic.irq,
+                    _inputs[i].nvic.preempt_priority,
+                    _inputs[i].nvic.sub_priority);
+        }
     }
+
     _tim_init(tim_period_us);
     _input_detected_fp = fp;
 }
@@ -182,6 +189,10 @@ static void __attribute__((unused)) _timebase_deinit() {
 }
 
 void TIM1_TRG_COM_TIM11_IRQHandler(void) {
+    for (uint8_t i = 0; i < COUNT(_inputs); i++) {
+        mgr_input_detect_state(_inputs[i].gpio.pin);
+    }
+
     mgr_input_trigger_handle();
     HAL_TIM_IRQHandler(&htim11);
 }

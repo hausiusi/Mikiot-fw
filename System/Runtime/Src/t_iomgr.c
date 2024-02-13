@@ -61,7 +61,7 @@ extern void thread_iomgr(void* args) {
     input_t input = { 0 };
     uint32_t notify_value = 0;
     for (;;) {
-        xTaskNotifyWait( pdFALSE, /* Don't clear bits on entry. */
+        xTaskNotifyWait(pdFALSE, /* Don't clear bits on entry. */
         ULONG_MAX, /* Clear all bits on exit. */
         &notify_value, /* Stores the notified value. */
         portMAX_DELAY);
@@ -75,8 +75,3 @@ extern void thread_iomgr(void* args) {
         vTaskDelay(0);
     }
 }
-
-void mw_gpio_exti_callback(uint16_t GPIO_Pin) {
-    mgr_input_detect_state(GPIO_Pin);
-}
-

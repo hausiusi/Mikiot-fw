@@ -27,6 +27,15 @@ typedef enum {
     SignalMeasuringFinished = 2,
 } signal_measure_state_enum_t;
 
+typedef enum {
+    SignalInputOne,
+    SignalInputTwo,
+    SignalInputThree,
+    SignalInputFour,
+    SignalInputFive,
+    SignalInputSix
+} signal_input_name_t;
+
 /* @formatter:on */
 
 typedef struct {
@@ -39,6 +48,7 @@ typedef struct {
     nvic_param_t nvic;
     signal_dectection_callback_fp callback;
     const char name[15];
+    signal_input_name_t input_name_id;
 } signal_param_t;
 
 typedef struct {
@@ -49,7 +59,6 @@ typedef struct {
 
 void mgr_signal_init();
 bool_t mgr_signal_add(signal_param_t* params);
-linked_list_t* mgr_signal_params_list_get();
 signal_measurement_stats_t* mgr_signal_stats_get();
 
 #endif /* MANAGERS_MGR_SIGNAL_H_ */

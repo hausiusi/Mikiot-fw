@@ -102,14 +102,15 @@ bool_t strnullempty(const char* restrict str) {
     return (str == NULL) || (str[0] == 0);
 }
 
-uint8_t singlebitpos(uint16_t n) {
-    uint8_t ch = n & 0xFF;
-    uint8_t shift = 0;
-    if (!ch) {
-        ch = (uint8_t) ((n & 0xFF00) >> 8);
-        shift = 8;
+int32_t map_int(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,
+        int32_t out_max) {
+    if (x < in_min) {
+        return out_min;
     }
 
-    uint8_t position = (0xFAC688 / ch / ch / ch) & 0x7;
-    return position + shift;
+    if (x > in_max) {
+        return out_max;
+    }
+
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }

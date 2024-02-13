@@ -68,9 +68,9 @@ bool_t ll_add(linked_list_t* ll, ll_node_t* node) {
     return true;
 }
 
-ll_node_t* ll_get_node(void* item, uint32_t deep_cp_len) {
+ll_node_t* ll_get_node(void const* item, uint32_t deep_cp_len) {
     ll_node_t* node = ll_malloc(sizeof(ll_node_t));
-    void* new_item = item;
+    void* new_item = (void*) item;
     if (node == NULL) {
         error_report(21, HeapError);
         return NULL;

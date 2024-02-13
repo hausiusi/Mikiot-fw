@@ -12,6 +12,8 @@
  extern "C" {
 #endif
 
+#include <inttypes.h>
+
 #define MAX_BUSY_BUF_TIMEOUT 0xFFFFFFFFUL
 #define RTOS_TASKMGR_USE	 1
 #define MIN_CPU_FREQ_MHZ	 16
@@ -33,6 +35,16 @@ typedef enum {
 typedef enum {
     false = 0, true = !false
 } bool_t;
+
+typedef struct {
+    uint64_t value;
+    bool_t locked;
+} lockable_uint64_t;
+
+typedef struct {
+    uint32_t value;
+    bool_t locked;
+} lockable_uint32_t;
 
 inline void def_wait_cycles(unsigned long long cycles) {
     while (cycles--) {

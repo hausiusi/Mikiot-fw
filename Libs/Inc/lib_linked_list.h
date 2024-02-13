@@ -49,7 +49,7 @@ ll_node_t* ll_find(linked_list_t* ll, void* item);
 
 bool_t ll_remove(linked_list_t* ll, ll_node_t* node);
 
-ll_node_t* ll_get_node(void* item, uint32_t deep_cp_len);
+ll_node_t* ll_get_node(void const* item, uint32_t deep_cp_len);
 
 void ll_node_destroy(ll_node_t* node);
 

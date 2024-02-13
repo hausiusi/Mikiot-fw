@@ -9,6 +9,7 @@
 #define MANAGERS_MGR_INPUTS_H_
 
 #include "mw_io.h"
+#include "defines.h"
 
 typedef enum {
     InputIdleStateLow = 0, /* Input low idle state. Triggers when the low-high transition happens */
@@ -28,6 +29,7 @@ typedef struct {
     input_state_enum_t state;
     input_state_enum_t confirmed_state;
     uint32_t top_lvl;
+    bool_t use_interrupts;
     nvic_param_t nvic;
     const char name[15];
 } input_t;
